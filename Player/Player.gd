@@ -1,23 +1,59 @@
 extends KinematicBody2D
 
 
-var speed := 100
+var velocity := Vector2(0, 100)
 
 
 func _ready() -> void:
     pass
 
 
-func _physics_process(_delta: float) -> void:
-    var dir := Vector2.ZERO
+func _physics_process(delta: float) -> void:
+
+    var a := Vector2.ZERO
+
+    # Damping
+    a -= velocity - Vector2(0, 200)
 
     if Input.is_action_pressed("up"):
-        dir.y -= 1
+        a.y -= 1000
     if Input.is_action_pressed("down"):
-        dir.y += 1
+        a.y += 1000
     if Input.is_action_pressed("left"):
-        dir.x -= 1
+        a.x -= 1000
     if Input.is_action_pressed("right"):
-        dir.x += 1
+        a.x += 1000
 
-    move_and_slide(dir.normalized() * speed)
+    # Get viewport rect in canvas coordinates
+    var visible = get_viewport_transform().xform_inv(get_viewport_rect())
+    var allowed = visible.grow(-100)
+
+    if !allowed.has_point(position):
+        var left_dist = position.x - allowed.position.x
+        var right_dist = allowed.end.x - position.x
+        var top_dist = position.y - allowed.position.y
+        var bottom_dist = allowed.end.y - position.y
+
+        if left_dist < 0:
+            a.x += 10 * -left_dist
+            if velocity.x < 0:
+                a.x -= 5 * velocity.x
+
+        if right_dist < 0:
+            a.x -= 10 * -right_dist
+            if velocity.x > 0:
+                a.x -= 5 * velocity.x
+
+        if top_dist < 0:
+            a.y += 10 * -top_dist
+            if velocity.y < 100:
+                a.y -= 5 * (velocity.y - 100)
+
+        if bottom_dist < 0:
+            a.y -= 10 * -bottom_dist
+            if velocity.y > 100:
+                a.y -= 5 * (velocity.y - 100)
+
+    velocity += delta * a
+
+    move_and_slide(velocity)
