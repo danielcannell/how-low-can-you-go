@@ -140,6 +140,6 @@ func _physics_process(delta: float) -> void:
     a -= velocity - Vector2(0, 200)
 
     velocity += delta * a
-    move_and_slide(velocity)
+    velocity = move_and_slide(velocity)
 
     Globals.player_position = position

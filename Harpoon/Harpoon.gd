@@ -8,7 +8,7 @@ onready var rope := $Rope
 
 
 const MAX_RANGE := 500
-const MIN_RANGE := 50
+const MIN_RANGE := 30
 const INITIAL_SPEED := 5000
 const FIRING_DURATION := 0.5
 const STUCK_DURATION := 0.5

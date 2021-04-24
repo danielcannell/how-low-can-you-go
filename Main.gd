@@ -9,7 +9,7 @@ onready var camera := $Camera2D
 onready var background := $Camera2D/Background
 onready var depth_label := $GUI/DepthLabel
 
-var fall_rate := 100.0
+var fall_rate := 50.0
 var prev_rounded_depth := 0.0
 
 
