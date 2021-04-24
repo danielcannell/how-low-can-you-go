@@ -7,16 +7,20 @@ enum AttackState { IDLE, AIM, FIRE }
 
 onready var sprite := $Sprite
 onready var arrow := $Arrow
+onready var gun := $Gun
 
 
 var harpoon = null
 var velocity := Vector2(0, 100)
 var swim_state: int = SwimState.IDLE
 var attack_state: int = AttackState.IDLE
+var gun_idle_transform = Transform2D()
+var gun_right_transform = Transform2D(-PI / 3.0, Vector2(25, -7))
+var gun_left_transform = Transform2D(PI / 3.0, Vector2(-25, -7))
 
 
 func _ready() -> void:
-    pass
+    gun_idle_transform = gun.transform
 
 
 func set_harpoon(h) -> void:
@@ -25,6 +29,7 @@ func set_harpoon(h) -> void:
 
 func harpoon_retreived() -> void:
     attack_state = AttackState.IDLE
+    gun.set_animation("loaded")
 
 
 func update_swim_state(a: Vector2) -> void:
@@ -40,12 +45,18 @@ func update_swim_state(a: Vector2) -> void:
         match swim_state:
             SwimState.IDLE:
                 sprite.set_animation("idle")
+                gun.set_flip_h(false)
+                gun.transform = gun_idle_transform
             SwimState.LEFT:
                 sprite.set_animation("swim")
                 sprite.set_flip_h(false)
+                gun.set_flip_h(true)
+                gun.transform = gun_left_transform
             SwimState.RIGHT:
                 sprite.set_animation("swim")
                 sprite.set_flip_h(true)
+                gun.set_flip_h(false)
+                gun.transform = gun_right_transform
 
 
 func update_attack_state() -> void:
@@ -62,6 +73,7 @@ func update_attack_state() -> void:
 
                 if harpoon != null:
                     harpoon.fire(position, velocity, arrow.rotation)
+                    gun.set_animation("unloaded")
 
         AttackState.FIRE:
             pass
