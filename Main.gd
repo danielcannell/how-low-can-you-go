@@ -8,6 +8,7 @@ const Harpoon = preload("res://Harpoon/Harpoon.tscn")
 onready var camera := $Camera2D
 onready var background := $Camera2D/Background
 onready var depth_label := $GUI/DepthLabel
+onready var canvas_modulate := $Camera2D/CanvasModulate
 
 var fall_rate := 50.0
 var prev_rounded_depth := 0.0
@@ -33,8 +34,9 @@ func _process(delta: float) -> void:
     Globals.depth += delta * fall_rate
     camera.position.y = Globals.depth
 
-    var color_scale := exp(-Globals.depth * 1e-4)
-    background.color = color_from_hsl(0.64, 1.0 * color_scale, 0.85 * color_scale)
+    Globals.color_scale = exp(-Globals.depth * 1e-4)
+    background.color = color_from_hsl(0.64, 1.0 * Globals.color_scale, 0.85 * Globals.color_scale)
+    canvas_modulate.color = Color.from_hsv(0, 0, Globals.color_scale)
 
     var rounded_depth := 10 * round(Globals.depth / 320)
     if prev_rounded_depth != rounded_depth:

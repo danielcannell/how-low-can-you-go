@@ -7,6 +7,8 @@ enum AttackState { IDLE, AIM, FIRE }
 
 onready var sprite := $Sprite
 onready var arrow := $Arrow
+onready var spotlight := $Spotlight
+onready var arealight := $AreaLight
 onready var gun := $Gun
 
 
@@ -87,8 +89,16 @@ func update_attack_state() -> void:
         arrow.rotation = mouse_dir.angle()
 
 
+func update_light() -> void:
+    var mouse_dir := get_global_mouse_position() - position
+    spotlight.rotation = mouse_dir.angle()
+    arealight.energy = 1 - Globals.color_scale
+    spotlight.energy = 1 - Globals.color_scale
+
+
 func _process(_delta: float) -> void:
     update_attack_state()
+    update_light()
 
 
 func _physics_process(delta: float) -> void:
