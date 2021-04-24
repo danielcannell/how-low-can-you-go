@@ -43,6 +43,10 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+    # Our enemy could have died
+    if enemy != null && !is_instance_valid(enemy):
+        enemy = null
+
     match state:
         State.FIRING:
             if rope_len() >= MAX_RANGE:
@@ -54,12 +58,15 @@ func _physics_process(delta: float) -> void:
                 state = State.STUCK
                 stuck_duration = STUCK_DURATION
 
+                enemy.damage(55)
+
         State.STUCK:
-            position = enemy.position
             stuck_duration -= delta
-            if stuck_duration < 0.0:
+            if enemy == null || stuck_duration < 0.0:
                 enemy = null
                 state = State.RETREIVING
+            else:
+                position = enemy.position
 
         State.RETREIVING:
             velocity = 500 * (player.position - position).normalized()

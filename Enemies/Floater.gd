@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends "res://Enemies/EnemyBase.gd"
 
 var spin := 0.0
 var drift := Vector2.ZERO
