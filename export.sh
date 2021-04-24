@@ -20,4 +20,4 @@ $GODOT "project.godot" --export "HTML5" export/index.html
 
 # Patch index file to use 'not-a-wasm' as extension
 mv export/index.wasm export/index.not-a-wasm
-sed -i "s/engine.setCanvas(canvas);/\0 Engine.setWebAssemblyFilenameExtension('not-a-wasm');/" export/index.html
+sed -i "s/\${loadPath}.wasm/\${loadPath}.not-a-wasm/" export/index.js
