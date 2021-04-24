@@ -2,13 +2,14 @@ extends KinematicBody2D
 
 
 enum SwimState { IDLE, LEFT, RIGHT }
-enum AttackState { IDLE, AIM }
+enum AttackState { IDLE, AIM, FIRE }
 
 
 onready var sprite := $Sprite
 onready var arrow := $Arrow
 
 
+var harpoon = null
 var velocity := Vector2(0, 100)
 var swim_state: int = SwimState.IDLE
 var attack_state: int = AttackState.IDLE
@@ -16,6 +17,10 @@ var attack_state: int = AttackState.IDLE
 
 func _ready() -> void:
     pass
+
+
+func set_harpoon(h) -> void:
+    harpoon = h
 
 
 func update_swim_state(a: Vector2) -> void:
@@ -43,15 +48,19 @@ func update_attack_state() -> void:
     match attack_state:
         AttackState.IDLE:
             if Input.is_action_pressed("attack"):
-                print("Aim!")
                 arrow.visible = true
                 attack_state = AttackState.AIM
 
         AttackState.AIM:
             if !Input.is_action_pressed("attack"):
                 arrow.visible = false
-                print("Fire!")
-                attack_state = AttackState.IDLE
+                attack_state = AttackState.FIRE
+
+                if harpoon != null:
+                    harpoon.fire(position, velocity, arrow.rotation)
+
+        AttackState.FIRE:
+            pass
 
     if attack_state == AttackState.AIM:
         var mouse_dir := get_global_mouse_position() - position

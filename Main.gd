@@ -2,6 +2,7 @@ extends Node2D
 
 
 const Player = preload("res://Player/Player.tscn")
+const Harpoon = preload("res://Harpoon/Harpoon.tscn")
 
 
 onready var camera := $Camera2D
@@ -19,7 +20,11 @@ func _ready() -> void:
 
 func spawn_player() -> void:
     var player := Player.instance()
+    var harpoon := Harpoon.instance()
     add_child(player)
+    add_child(harpoon)
+    player.set_harpoon(harpoon)
+    harpoon.set_player(player)
 
 
 func _process(delta: float) -> void:
