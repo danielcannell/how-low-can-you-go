@@ -12,7 +12,7 @@ const speed_x := 100.0
 
 
 func _ready() -> void:
-    yield(get_tree().create_timer(1.0), "timeout")
+    pass
 
 
 func _physics_process(delta: float) -> void:
