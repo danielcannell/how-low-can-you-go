@@ -8,3 +8,11 @@ var player_position := Vector2.ZERO
 func get_spawn_y() -> float:
     # Spawn new enemies 64 below base of screen
     return depth + (screen_height / 2) + 64
+
+
+func normalise_angle_diff(ang: float) -> float:
+    while ang < -PI:
+        ang += 2 * PI
+    while ang > PI:
+        ang -= 2 * PI
+    return ang
