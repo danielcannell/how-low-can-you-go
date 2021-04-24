@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://Enemies/EnemyManager.gd" type="Script" id=2]
 [ext_resource path="res://Enemies/Floater.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Enemies/Fish.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Enemies/Shark.tscn" type="PackedScene" id=5]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 1 )
@@ -26,3 +27,4 @@ __meta__ = {
 script = ExtResource( 2 )
 Floater = ExtResource( 3 )
 Fish = ExtResource( 4 )
+Shark = ExtResource( 5 )

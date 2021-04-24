@@ -1,5 +1,4 @@
-extends "res://Enemies/Floater.gd"
-
+extends "res://Enemies/EnemyBase.gd"
 
 enum State {
     TURN,
