@@ -1,10 +1,14 @@
 extends Area2D
 
+signal bool_splatter(cls, location, angle)
+
 
 enum State { IDLE, FIRING, STUCK, RETREIVING }
 
 
 onready var rope := $Rope
+
+var BloodSplatter = preload("res://Effects/BloodSpatter.tscn")
 
 
 const MAX_RANGE := 500
@@ -44,6 +48,10 @@ func _ready() -> void:
     pass
 
 
+func _spawn_blood() -> void:
+    emit_signal("bool_splatter", BloodSplatter, position, rotation)
+
+
 func _physics_process(delta: float) -> void:
     duration -= delta
 
@@ -62,6 +70,7 @@ func _physics_process(delta: float) -> void:
 
             for b in bodies:
                 b.damage(10)
+                _spawn_blood()
                 if b.alive:
                     enemy = b
                     state = State.STUCK

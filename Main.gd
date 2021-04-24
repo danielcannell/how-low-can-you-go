@@ -27,6 +27,7 @@ func spawn_player() -> void:
     add_child(harpoon)
     player.set_harpoon(harpoon)
     harpoon.set_player(player)
+    harpoon.connect("bool_splatter", self, "_on_blood_splatter")
 
 
 func _process(delta: float) -> void:
@@ -45,3 +46,10 @@ func _process(delta: float) -> void:
 func color_from_hsl(hue: float, sat: float, light: float) -> Color:
     sat *= light if light < 0.5 else 1.0 - light
     return Color.from_hsv(hue, 2 * sat / (light + sat), light + sat)
+
+
+func _on_blood_splatter(cls, location, direction):
+    var b = cls.instance()
+    add_child(b)
+    b.rotation = direction
+    b.position = location
