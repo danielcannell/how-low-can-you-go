@@ -1,4 +1,4 @@
-extends StaticBody2D
+extends Area2D
 
 
 enum State { IDLE, FIRING, STUCK, RETREIVING }
@@ -8,11 +8,15 @@ onready var rope := $Rope
 
 
 const MAX_RANGE := 500
-const MIN_RANGE := 100
+const MIN_RANGE := 50
 const SPEED := 1000
+const STUCK_DURATION := 0.5
+
 var velocity := Vector2()
 var state: int = State.IDLE
 var player = null
+var enemy = null
+var stuck_duration := 0.0
 
 
 func set_player(p) -> void:
@@ -42,6 +46,19 @@ func _physics_process(delta: float) -> void:
     match state:
         State.FIRING:
             if rope_len() >= MAX_RANGE:
+                state = State.RETREIVING
+
+            var bodies := get_overlapping_bodies()
+            if !bodies.empty():
+                enemy = bodies[0]
+                state = State.STUCK
+                stuck_duration = STUCK_DURATION
+
+        State.STUCK:
+            position = enemy.position
+            stuck_duration -= delta
+            if stuck_duration < 0.0:
+                enemy = null
                 state = State.RETREIVING
 
         State.RETREIVING:
