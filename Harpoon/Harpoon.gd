@@ -66,6 +66,7 @@ func _physics_process(delta: float) -> void:
                     enemy = b
                     state = State.STUCK
                     duration = STUCK_DURATION
+                    break
 
         State.STUCK:
             if enemy == null || duration < 0.0:
@@ -91,5 +92,5 @@ func _physics_process(delta: float) -> void:
                 player.harpoon_retreived()
 
     if visible:
-        rope.points[1] = get_global_transform().xform_inv(player.position)
         position += delta * velocity
+        rope.points[1] = get_global_transform().xform_inv(player.position)
