@@ -112,3 +112,5 @@ func _physics_process(delta: float) -> void:
 
     velocity += delta * a
     move_and_slide(velocity)
+
+    Globals.player_position = position
