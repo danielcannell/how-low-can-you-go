@@ -1,39 +1,65 @@
 extends KinematicBody2D
 
 
-enum SwimState { SWIM_STATE_IDLE, SWIM_STATE_LEFT, SWIM_STATE_RIGHT };
+enum SwimState { IDLE, LEFT, RIGHT }
+enum AttackState { IDLE, AIM }
 
 
 onready var sprite := $Sprite
+onready var arrow := $Arrow
 
 
 var velocity := Vector2(0, 100)
-var swim_state: int = SwimState.SWIM_STATE_IDLE
+var swim_state: int = SwimState.IDLE
+var attack_state: int = AttackState.IDLE
 
 
 func _ready() -> void:
     pass
 
 
-func set_animation(a: Vector2) -> void:
-    var new_swim_state = SwimState.SWIM_STATE_IDLE
+func update_swim_state(a: Vector2) -> void:
+    var new_swim_state = SwimState.IDLE
     if a.x > 100:
-        new_swim_state = SwimState.SWIM_STATE_RIGHT
+        new_swim_state = SwimState.RIGHT
     elif a.x < -100:
-        new_swim_state = SwimState.SWIM_STATE_LEFT
+        new_swim_state = SwimState.LEFT
 
     if new_swim_state != swim_state:
         swim_state = new_swim_state
 
         match swim_state:
-            SwimState.SWIM_STATE_IDLE:
+            SwimState.IDLE:
                 sprite.set_animation("idle")
-            SwimState.SWIM_STATE_LEFT:
+            SwimState.LEFT:
                 sprite.set_animation("swim")
                 sprite.set_flip_h(false)
-            SwimState.SWIM_STATE_RIGHT:
+            SwimState.RIGHT:
                 sprite.set_animation("swim")
                 sprite.set_flip_h(true)
+
+
+func update_attack_state() -> void:
+    match attack_state:
+        AttackState.IDLE:
+            if Input.is_action_pressed("attack"):
+                print("Aim!")
+                arrow.visible = true
+                attack_state = AttackState.AIM
+
+        AttackState.AIM:
+            if !Input.is_action_pressed("attack"):
+                arrow.visible = false
+                print("Fire!")
+                attack_state = AttackState.IDLE
+
+    if attack_state == AttackState.AIM:
+        var mouse_dir := get_global_mouse_position() - position
+        arrow.rotation = mouse_dir.angle()
+
+
+func _process(_delta: float) -> void:
+    update_attack_state()
 
 
 func _physics_process(delta: float) -> void:
@@ -79,7 +105,7 @@ func _physics_process(delta: float) -> void:
             if velocity.y > 100:
                 a.y -= 5 * (velocity.y - 100)
 
-    set_animation(a)
+    update_swim_state(a)
 
     # Damping
     a -= velocity - Vector2(0, 200)
