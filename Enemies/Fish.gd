@@ -5,6 +5,8 @@ enum State {
     FORWARD,
 }
 
+onready var sprite = $Sprite
+
 const TURN_SPEED := 20.0
 const INITIAL_SPEED := 300.0
 const MIN_SPEED := 150.0
@@ -26,12 +28,13 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+    sprite.flip_v = self.rotation_degrees < -90 or self.rotation_degrees > 90
     match current_state:
         State.TURN:
             var desired_angle: float = (self.position - Globals.player_position).angle()
             var angle := self.rotation
 
-            var diff: float = Globals.normalise_angle_diff(desired_angle - angle)
+            var diff: float = Globals.normalise_angle(desired_angle - angle)
             if abs(diff) < turn_speed * delta:
                 self.rotation = desired_angle
                 set_state(State.FORWARD)

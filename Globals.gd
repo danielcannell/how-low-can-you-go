@@ -10,7 +10,7 @@ func get_spawn_y() -> float:
     return depth + (screen_height / 2) + 64
 
 
-func normalise_angle_diff(ang: float) -> float:
+func normalise_angle(ang: float) -> float:
     while ang < -PI:
         ang += 2 * PI
     while ang > PI:

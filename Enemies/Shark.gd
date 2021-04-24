@@ -2,6 +2,8 @@ extends "res://Enemies/EnemyBase.gd"
 
 const RETHINK_TIME := 1.0
 
+onready var sprite = $Sprite
+
 var rethink_time := 0.0
 var move_to := Vector2.ZERO
 const speed_y_up := 120.0
@@ -21,6 +23,7 @@ func _physics_process(delta: float) -> void:
 
     var move_vec := Vector2.ZERO
     var dpos := Globals.player_position - self.position
+    sprite.flip_h = dpos.x > 0
     var speed_y = speed_y_down if dpos.y < 0 else speed_y_up
     if abs(dpos.y) < speed_y * delta:
         move_vec.y = dpos.y
