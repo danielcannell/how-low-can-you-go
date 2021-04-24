@@ -9,7 +9,7 @@ onready var rope := $Rope
 
 const MAX_RANGE := 500
 const MIN_RANGE := 50
-const SPEED := 1000
+const INITIAL_SPEED := 5000
 const STUCK_DURATION := 0.5
 
 var velocity := Vector2()
@@ -28,7 +28,7 @@ func fire(pos: Vector2, vel: Vector2, angle: float) -> void:
         state = State.FIRING
 
         var dir := Vector2(1, 0).rotated(angle)
-        velocity = vel + SPEED * dir
+        velocity = vel + INITIAL_SPEED * dir
         position = pos + MIN_RANGE * dir
         rotation = angle
         visible = true
@@ -49,6 +49,8 @@ func _physics_process(delta: float) -> void:
 
     match state:
         State.FIRING:
+            velocity -= 10 * delta * (velocity - Vector2(0, 200))
+
             if rope_len() >= MAX_RANGE:
                 state = State.RETREIVING
 
@@ -71,6 +73,14 @@ func _physics_process(delta: float) -> void:
 
         State.RETREIVING:
             velocity = 500 * (player.position - position).normalized()
+
+            var rotation_error = (position - player.position).angle() - rotation
+            while rotation_error < -PI:
+                rotation_error += 2 * PI
+            while rotation_error > PI:
+                rotation_error -= 2 * PI
+
+            rotation += 5 * delta * rotation_error
 
             if rope_len() < MIN_RANGE:
                 visible = false

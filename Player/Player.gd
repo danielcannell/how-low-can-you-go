@@ -10,6 +10,9 @@ onready var arrow := $Arrow
 onready var gun := $Gun
 
 
+const HARPOON_KICK = 400
+
+
 var harpoon = null
 var velocity := Vector2(0, 100)
 var swim_state: int = SwimState.IDLE
@@ -73,6 +76,7 @@ func update_attack_state() -> void:
 
                 if harpoon != null:
                     harpoon.fire(position, velocity, arrow.rotation)
+                    velocity -= HARPOON_KICK * Vector2(1, 0).rotated(arrow.rotation)
                     gun.set_animation("unloaded")
 
         AttackState.FIRE:
