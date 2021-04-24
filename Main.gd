@@ -35,7 +35,7 @@ func _process(delta: float) -> void:
     Globals.depth += delta * fall_rate
     camera.position.y = Globals.depth
 
-    Globals.color_scale = exp(-Globals.depth * 1e-3)
+    Globals.color_scale = exp(-Globals.depth * 1e-2)
     background.color = color_from_hsl(0.64, 1.0 * Globals.color_scale, 0.85 * Globals.color_scale)
     canvas_modulate.color = Color.from_hsv(0, 0, Globals.color_scale)
 
