@@ -37,7 +37,7 @@ func _process(delta: float) -> void:
 
     Globals.color_scale = exp(-Globals.depth * 1e-3)
     background.color = color_from_hsl(0.64, 1.0 * Globals.color_scale, 0.85 * Globals.color_scale)
-    canvas_modulate.color = Color.from_hsv(0, 0, Globals.color_scale)
+    canvas_modulate.color = Color.from_hsv(0, 0, min(0.8, Globals.color_scale))
 
     var rounded_depth := 10 * round(Globals.depth / 320)
     if prev_rounded_depth != rounded_depth:
