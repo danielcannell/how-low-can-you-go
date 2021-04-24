@@ -12,7 +12,7 @@ const speed_x := 100.0
 
 
 func _ready() -> void:
-    pass
+    set_max_hp(100.0)
 
 
 func _physics_process(delta: float) -> void:
