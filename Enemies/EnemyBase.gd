@@ -20,6 +20,12 @@ func on_dead() -> void:
     queue_free()
 
 
+# Separate from on_dead to allow that to be overriden
+func out_of_bounds() -> void:
+    alive = false
+    queue_free()
+
+
 func damage(amount: float) -> void:
     healthbar.visible = true
     hp -= amount
