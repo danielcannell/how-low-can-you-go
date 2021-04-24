@@ -53,12 +53,13 @@ func _physics_process(delta: float) -> void:
                 state = State.RETREIVING
 
             var bodies := get_overlapping_bodies()
-            if !bodies.empty():
-                enemy = bodies[0]
-                state = State.STUCK
-                stuck_duration = STUCK_DURATION
 
-                enemy.damage(55)
+            for b in bodies:
+                b.damage(10)
+                if b.alive:
+                    enemy = b
+                    state = State.STUCK
+                    stuck_duration = STUCK_DURATION
 
         State.STUCK:
             stuck_duration -= delta

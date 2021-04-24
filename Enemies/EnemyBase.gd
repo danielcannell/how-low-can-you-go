@@ -1,12 +1,14 @@
 extends KinematicBody2D
 
 
-var hp: float = 100.0
+var hp := 100.0
+var alive := true
 
 
 func damage(amount: float) -> void:
     hp -= amount
-    if hp < 0:
+    if hp <= 0:
+        alive = false
         queue_free()
 
 

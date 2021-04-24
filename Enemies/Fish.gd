@@ -22,6 +22,7 @@ var speed := 0.0
 
 
 func _ready() -> void:
+    hp = 10.0
     set_state(State.TURN)
 
 
