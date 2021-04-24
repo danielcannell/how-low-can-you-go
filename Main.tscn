@@ -14,10 +14,10 @@ z_index = -10
 current = true
 
 [node name="Background" type="ColorRect" parent="Camera2D"]
-margin_left = -10000.0
-margin_top = -10000.0
-margin_right = 10000.0
-margin_bottom = 10000.0
+margin_left = -9973.12
+margin_top = -9978.58
+margin_right = 10026.9
+margin_bottom = 10021.4
 color = Color( 0.501961, 0.552941, 1, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -28,3 +28,15 @@ script = ExtResource( 2 )
 Floater = ExtResource( 3 )
 Fish = ExtResource( 4 )
 Shark = ExtResource( 5 )
+
+[node name="GUI" type="CanvasLayer" parent="."]
+
+[node name="DepthLabel" type="Label" parent="GUI"]
+margin_left = 6.92957
+margin_top = 6.71958
+margin_right = 83.9296
+margin_bottom = 20.7196
+text = "Depth: 0 m"
+__meta__ = {
+"_edit_use_anchors_": false
+}
