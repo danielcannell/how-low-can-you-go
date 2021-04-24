@@ -4,8 +4,8 @@
 [ext_resource path="res://Harpoon/Harpoon.gd" type="Script" id=2]
 
 [sub_resource type="CapsuleShape2D" id=1]
-radius = 6.79581
-height = 76.4099
+radius = 2.33334
+height = 45.0
 
 [node name="Harpoon" type="Area2D"]
 visible = false

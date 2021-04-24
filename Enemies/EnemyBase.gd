@@ -36,6 +36,10 @@ func damage(amount: float) -> void:
     healthbar.visible = alive
 
 
+func get_splatter_params() -> Dictionary:
+    return {"amount": 30}
+
+
 func _ready():
     healthbar = healthbar_template.instance()
     healthbar.position = Vector2(0, -10)

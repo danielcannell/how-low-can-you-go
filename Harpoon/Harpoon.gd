@@ -1,6 +1,6 @@
 extends Area2D
 
-signal bool_splatter(cls, location, angle)
+signal bool_splatter(cls, location, angle, params)
 
 
 enum State { IDLE, FIRING, STUCK, RETREIVING }
@@ -53,8 +53,11 @@ func _ready() -> void:
     pass
 
 
-func _spawn_blood() -> void:
-    emit_signal("bool_splatter", BloodSplatter, position, rotation)
+func _spawn_blood(params) -> void:
+    emit_signal("bool_splatter", BloodSplatter, position, rotation, params)
+
+func point_vec() -> Vector2:
+    return Vector2(cos(rotation), sin(rotation))
 
 
 func _physics_process(delta: float) -> void:
@@ -81,7 +84,7 @@ func _physics_process(delta: float) -> void:
                     hit.append(b)
 
                 b.damage(10)
-                _spawn_blood()
+                _spawn_blood(b.get_splatter_params())
                 if b.alive:
                     enemy = b
                     state = State.STUCK

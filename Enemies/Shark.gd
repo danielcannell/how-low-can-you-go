@@ -30,6 +30,10 @@ func on_dead() -> void:
     sprite.flip_v = true
 
 
+func get_splatter_params() -> Dictionary:
+    return {"amount": 70}
+
+
 func damage(amount: float) -> void:
     .damage(amount)
     set_damage_state(hp / max_hp)

@@ -50,8 +50,10 @@ func color_from_hsl(hue: float, sat: float, light: float) -> Color:
     return Color.from_hsv(hue, 2 * sat / (light + sat), light + sat)
 
 
-func _on_blood_splatter(cls, location, direction):
+func _on_blood_splatter(cls, location, direction, params):
     var b = cls.instance()
     add_child(b)
     b.rotation = direction
     b.position = location
+    b.set_params(params)
+    b.run()

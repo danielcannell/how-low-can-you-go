@@ -28,6 +28,10 @@ func on_dead() -> void:
     alive = false
 
 
+func get_splatter_params() -> Dictionary:
+    return {"amount": 15}
+
+
 func zombify() -> void:
     current_state = State.ZOMBIE
 
