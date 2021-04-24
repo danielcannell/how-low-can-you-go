@@ -28,7 +28,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
     match current_state:
         State.TURN:
-            var desired_angle := (self.position - Globals.player_position).angle()
+            var desired_angle: float = (self.position - Globals.player_position).angle()
             var angle := self.rotation
 
             var diff: float = Globals.normalise_angle_diff(desired_angle - angle)
