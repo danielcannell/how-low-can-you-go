@@ -10,6 +10,16 @@ script = ExtResource( 1 )
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 
+[node name="Background" type="ColorRect" parent="Camera2D"]
+margin_left = -10000.0
+margin_top = -10000.0
+margin_right = 10000.0
+margin_bottom = 10000.0
+color = Color( 0.501961, 0.552941, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="EnemyManager" type="Node2D" parent="."]
 script = ExtResource( 2 )
 Floater = ExtResource( 3 )
