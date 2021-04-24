@@ -3,19 +3,19 @@ extends "res://Enemies/EnemyBase.gd"
 const RETHINK_TIME := 1.0
 
 onready var sprite: AnimatedSprite = $Sprite
+onready var eye := $Light2D
 
-var rethink_time := 0.0
-var move_to := Vector2.ZERO
 const speed_y_up := 120.0
 const speed_y_down := 20.0
 const speed_x := 100.0
 
 const dead_frame = 5;
 
+var eye_offset_from_sprite := Vector2.ZERO
 
 func _ready() -> void:
     set_max_hp(100.0)
-
+    eye_offset_from_sprite = eye.position - sprite.position
 
 # between 0 and 1, with 0 being undamanged and 1 being dead
 func set_damage_state(state: float) -> void:
@@ -41,14 +41,14 @@ func damage(amount: float) -> void:
 
 func _physics_process(delta: float) -> void:
     if alive:
-        rethink_time -= delta
-        if rethink_time < 0:
-            rethink_time = RETHINK_TIME
-            move_to = Globals.player_position - self.position
-
         var move_vec := Vector2.ZERO
         var dpos := Globals.player_position - self.position
-        sprite.flip_h = dpos.x > 0
+
+        var flip := dpos.x > 0
+        var flipint := -1 if flip else 1
+        sprite.flip_h = flip
+        eye.position = sprite.position + Vector2(eye_offset_from_sprite.x * flipint, eye_offset_from_sprite.y)
+
         var speed_y = speed_y_down if dpos.y < 0 else speed_y_up
         if abs(dpos.y) < speed_y * delta:
             move_vec.y = dpos.y
