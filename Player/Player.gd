@@ -23,6 +23,10 @@ func set_harpoon(h) -> void:
     harpoon = h
 
 
+func harpoon_retreived() -> void:
+    attack_state = AttackState.IDLE
+
+
 func update_swim_state(a: Vector2) -> void:
     var new_swim_state = SwimState.IDLE
     if a.x > 100:
