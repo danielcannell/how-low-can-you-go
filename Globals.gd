@@ -1,6 +1,7 @@
 extends Node
 
 var depth := 0.0
+var screen_width := 0.0
 var screen_height := 0.0
 
 func get_spawn_y() -> float:

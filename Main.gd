@@ -13,6 +13,7 @@ var fall_rate := 100.0
 func _ready() -> void:
     var vp := camera.get_viewport()
     Globals.screen_height = vp.size.y
+    Globals.screen_width = vp.size.x
     spawn_player()
 
 
