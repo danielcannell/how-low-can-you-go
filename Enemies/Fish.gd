@@ -3,6 +3,7 @@ extends "res://Enemies/EnemyBase.gd"
 enum State {
     TURN,
     FORWARD,
+    ZOMBIE,
 }
 
 onready var sprite = $Sprite
@@ -20,6 +21,15 @@ var turn_speed := 0.0
 # FORWARD state
 var forward_move := Vector2.ZERO
 var speed := 0.0
+
+
+# Override on_dead so that we don't get cleaned up automatically
+func on_dead() -> void:
+    alive = false
+
+
+func zombify() -> void:
+    current_state = State.ZOMBIE
 
 
 func _ready() -> void:
@@ -52,6 +62,10 @@ func _physics_process(delta: float) -> void:
             forward_move -= move_vec
             speed = max(MIN_SPEED, speed - (DRAG * delta))
             move_and_collide(move_vec)
+
+        State.ZOMBIE:
+            # Position controlled externally
+            pass
 
 
 func set_state(new_state: int) -> void:

@@ -35,10 +35,6 @@ func damage(amount: float) -> void:
     set_damage_state(hp / max_hp)
 
 
-func out_of_bounds_entered() -> void:
-    queue_free()
-
-
 func _physics_process(delta: float) -> void:
     if alive:
         rethink_time -= delta
