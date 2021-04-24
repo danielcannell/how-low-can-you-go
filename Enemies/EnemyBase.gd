@@ -15,13 +15,17 @@ func set_max_hp(max_: float) -> void:
     max_hp = max_
 
 
+func on_dead() -> void:
+    alive = false
+    queue_free()
+
+
 func damage(amount: float) -> void:
     healthbar.visible = true
     hp -= amount
     healthbar.set_percent(max(hp, 0) / max_hp)
     if hp <= 0:
-        alive = false
-        queue_free()
+        on_dead()
 
 
 func _ready():
