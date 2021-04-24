@@ -36,7 +36,7 @@ func _process(delta: float) -> void:
     camera.position.y = Globals.depth
 
     Globals.color_scale = exp(-Globals.depth * 1e-3)
-    background.color = color_from_hsl(0.64, 1.0 * Globals.color_scale, 0.85 * Globals.color_scale)
+    background.color = color_from_hsl(0.64, 0.4 + 0.6 * Globals.color_scale, 0.25 + (0.6 * Globals.color_scale))
     canvas_modulate.color = Color.from_hsv(0, 0, min(0.8, Globals.color_scale))
 
     var rounded_depth := 10 * round(Globals.depth / 320)
