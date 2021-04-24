@@ -28,6 +28,7 @@ func on_dead() -> void:
     alive = false
     set_damage_state(1)
     sprite.flip_v = true
+    eye.energy = 0
 
 
 func get_splatter_params() -> Dictionary:
