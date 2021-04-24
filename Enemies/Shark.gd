@@ -14,7 +14,7 @@ const dead_frame = 5;
 var eye_offset_from_sprite := Vector2.ZERO
 
 func _ready() -> void:
-    set_max_hp(100.0)
+    set_max_hp(50.0)
     eye_offset_from_sprite = eye.position - sprite.position
 
 # between 0 and 1, with 0 being undamanged and 1 being dead
