@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Art/diver.png" type="Texture" id=1]
 [ext_resource path="res://Player/Player.gd" type="Script" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Art/arrow.png" type="Texture" id=4]
 [ext_resource path="res://Art/harpoon-gun-loaded.png" type="Texture" id=5]
 [ext_resource path="res://Art/harpoon-gun-unloaded.png" type="Texture" id=6]
+[ext_resource path="res://Art/6x6-bubble.png" type="Texture" id=7]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -36,6 +37,21 @@ animations = [ {
 "name": "loaded",
 "speed": 5.0
 } ]
+
+[sub_resource type="ParticlesMaterial" id=4]
+flag_disable_z = true
+direction = Vector3( -2, 1, 0 )
+spread = 28.26
+flatness = 0.76
+gravity = Vector3( 0, -98, 0 )
+initial_velocity = 100.0
+initial_velocity_random = 0.5
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+tangential_accel = 2.0
+tangential_accel_random = 0.5
+scale = 1.5
+scale_random = 1.0
 
 [node name="Player" type="KinematicBody2D"]
 collision_mask = 4
@@ -68,3 +84,14 @@ position = Vector2( 10.6908, 10.2453 )
 rotation = -0.127409
 frames = SubResource( 3 )
 animation = "loaded"
+
+[node name="Particles2D" type="Particles2D" parent="."]
+position = Vector2( 0.127937, -9.40556 )
+scale = Vector2( 0.5, 0.5 )
+amount = 80
+lifetime = 8.0
+explosiveness = 0.6
+randomness = 0.5
+local_coords = false
+process_material = SubResource( 4 )
+texture = ExtResource( 7 )
