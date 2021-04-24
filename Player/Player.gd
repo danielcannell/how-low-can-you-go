@@ -4,7 +4,7 @@ extends KinematicBody2D
 var speed := 100
 
 
-func _ready():
+func _ready() -> void:
     pass
 
 
@@ -20,5 +20,4 @@ func _physics_process(_delta: float) -> void:
     if Input.is_action_pressed("right"):
         dir.x += 1
 
-    dir = dir.normalized()
-    move_and_slide(dir * speed)
+    move_and_slide(dir.normalized() * speed)
