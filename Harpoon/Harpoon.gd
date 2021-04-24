@@ -19,6 +19,11 @@ var player = null
 var enemy = null
 var duration := 0.0
 
+# Enemies that have been hit this throw
+var hit := []
+# Enemies that are pinned to the harpoon
+var pinned := []
+
 
 func set_player(p) -> void:
     player = p
@@ -61,12 +66,21 @@ func _physics_process(delta: float) -> void:
             var bodies := get_overlapping_bodies()
 
             for b in bodies:
+                # Only hit each body once per throw
+                if b in hit:
+                    continue
+                else:
+                    hit.append(b)
+
                 b.damage(10)
                 if b.alive:
                     enemy = b
                     state = State.STUCK
                     duration = STUCK_DURATION
                     break
+                elif b.has_method("zombify"):
+                    b.zombify()
+                    pinned.append(b)
 
         State.STUCK:
             if enemy == null || duration < 0.0:
@@ -84,12 +98,25 @@ func _physics_process(delta: float) -> void:
             while rotation_error > PI:
                 rotation_error -= 2 * PI
 
-            rotation += 5 * delta * rotation_error
+            var rotation_change = 5 * delta * rotation_error
+            rotate(rotation_change)
+            for p in pinned:
+                p.rotate(rotation_change)
 
             if rope_len() < MIN_RANGE:
                 visible = false
                 state = State.IDLE
                 player.harpoon_retreived()
+
+                # Clean up all the pinned enemies
+                for p in pinned:
+                    p.out_of_bounds()
+
+                pinned.clear()
+                hit.clear()
+
+    for p in pinned:
+        p.position = position
 
     if visible:
         position += delta * velocity
