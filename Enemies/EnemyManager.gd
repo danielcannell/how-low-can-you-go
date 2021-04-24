@@ -19,5 +19,5 @@ func _process(delta: float) -> void:
         next_spawn_time = SPAWN_RATE
 
         var enemy: Node2D = Floater.instance()
-        enemy.position = Vector2(rand_range(50, 450), Globals.depth + 50)
+        enemy.position = Vector2(rand_range(50, 450), Globals.get_spawn_y())
         add_child(enemy)
