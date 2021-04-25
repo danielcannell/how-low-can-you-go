@@ -10,10 +10,19 @@ onready var background := $Camera2D/Background
 onready var depth_label := $UICanvas/DepthLabel
 onready var canvas_modulate := $Camera2D/CanvasModulate
 onready var game_over_ui := $UICanvas/GameOverUI
-onready var restart_button := $UICanvas/GameOverUI/VBoxContainer/RestartButton
+onready var leaderboard_ui := $UICanvas/LeaderboardUI
+onready var restart_button1 := $UICanvas/GameOverUI/VBoxContainer/RestartButton
+onready var restart_button2 := $UICanvas/LeaderboardUI/VBoxContainer/RestartButton
+onready var leaderboard_button := $UICanvas/GameOverUI/VBoxContainer/LeaderboardButton
+onready var leaderboard_container := $UICanvas/LeaderboardUI/VBoxContainer/GridContainer
+onready var submit_button := $UICanvas/LeaderboardUI/VBoxContainer/HBoxContainer/SubmitButton
+onready var name_text_edit := $UICanvas/LeaderboardUI/VBoxContainer/HBoxContainer/NameTextEdit
+onready var http_request := $HTTPRequest
+onready var label_font := load("res://Art/SmallFont.tres")
 
 var fall_rate := 50.0
 var prev_rounded_depth := 0.0
+var score := 0.0
 
 
 func _ready() -> void:
@@ -21,11 +30,71 @@ func _ready() -> void:
 
     spawn_player()
 
-    restart_button.connect("button_up", self, "restart_game")
+    restart_button1.connect("button_up", self, "restart_game")
+    restart_button2.connect("button_up", self, "restart_game")
+    leaderboard_button.connect("button_up", self, "show_leaderboard")
+    submit_button.connect("button_up", self, "submit_score")
+    http_request.connect("leaderboard_updated", self, "on_leaderboard_updated")
+
+
+func on_leaderboard_updated(leaderboard):
+    # print("Update: ", leaderboard)
+
+    for n in leaderboard_container.get_children():
+        leaderboard_container.remove_child(n)
+        n.queue_free()
+
+    var top := []
+    for name in leaderboard:
+        # print("Inserting ", name, "=", leaderboard[name])
+        var score: float = leaderboard[name]
+        for i in range(top.size() + 1):
+            if i == top.size() || score > top[i][1]:
+                top.insert(i, [name, score])
+                break
+
+    # Only keep top 5
+    if top.size() > 5:
+        top.resize(5)
+
+    for record in top:
+        var name_label = Label.new()
+        var score_label = Label.new()
+
+        name_label.text = record[0]
+        score_label.text = str(record[1])
+
+        name_label.set("custom_fonts/font", label_font)
+        score_label.set("custom_fonts/font", label_font)
+
+        leaderboard_container.add_child(name_label)
+        leaderboard_container.add_child(score_label)
+
+
+func submit_score():
+    var name = name_text_edit.text
+
+    var regex := RegEx.new()
+    regex.compile("[^a-zA-Z0-9 ]")
+    name = regex.sub(name, "", true)
+
+    name = name.substr(0, 7)
+    name = name.strip_edges()
+
+    # Default value of the text edit
+    if name == "Name":
+        return
+
+    http_request.update_leaderboard(name, score)
 
 
 func restart_game() -> void:
     get_tree().reload_current_scene()
+
+
+func show_leaderboard() -> void:
+    game_over_ui.visible = false
+    leaderboard_ui.visible = true
 
 
 func spawn_player() -> void:
@@ -41,7 +110,9 @@ func spawn_player() -> void:
 
 
 func on_player_died():
+    score = 10 * round(Globals.depth / 320)
     game_over_ui.visible = true
+    http_request.fetch_leaderboard()
 
 
 func depth_scale(depth: float) -> float:
