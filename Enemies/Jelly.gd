@@ -2,10 +2,13 @@ extends "res://Enemies/DrifterBase.gd"
 
 onready var light = $Light2D
 
+var obj_scale: float = 1.0
+
 func _ready() -> void:
     spin_rate = 0
     drift_rate_x = 50.0
     drift_rate_y = 50.0
+    obj_scale = rand_range(0.9, 1.0)
     ._ready()
 
 func dps() -> float:
@@ -19,3 +22,7 @@ func update_light() -> void:
 func _process(delta):
     if alive:
         update_light()
+
+
+func _integrate_forces(state):
+    set_scale(Vector2(obj_scale, obj_scale))
