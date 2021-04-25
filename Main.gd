@@ -10,16 +10,25 @@ onready var background := $Camera2D/Background
 onready var depth_label := $GUI/DepthLabel
 onready var canvas_modulate := $Camera2D/CanvasModulate
 onready var game_over_ui := $UICanvas/GameOverUI
+onready var restart_button := $UICanvas/GameOverUI/VBoxContainer/RestartButton
 
 var fall_rate := 50.0
 var prev_rounded_depth := 0.0
 
 
 func _ready() -> void:
+    Globals.depth = 0.0
+
     var vp := camera.get_viewport()
     Globals.screen_height = vp.size.y
     Globals.screen_width = vp.size.x
     spawn_player()
+
+    restart_button.connect("button_up", self, "restart_game")
+
+
+func restart_game() -> void:
+    get_tree().reload_current_scene()
 
 
 func spawn_player() -> void:

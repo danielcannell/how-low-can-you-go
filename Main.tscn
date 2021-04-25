@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://Enemies/EnemyManager.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://OutOfBounds.gd" type="Script" id=6]
 [ext_resource path="res://Enemies/Jelly.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Art/LargeFont.tres" type="DynamicFont" id=8]
+[ext_resource path="res://Art/MediumFont.tres" type="DynamicFont" id=9]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10000, 20 )
@@ -155,19 +156,37 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GameOverLabel" type="Label" parent="UICanvas/GameOverUI"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UICanvas/GameOverUI"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -178.5
-margin_top = -43.5
+margin_top = -68.0
 margin_right = 178.5
-margin_bottom = 43.5
+margin_bottom = 68.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GameOverLabel" type="Label" parent="UICanvas/GameOverUI/VBoxContainer"]
+margin_right = 357.0
+margin_bottom = 87.0
 custom_fonts/font = ExtResource( 8 )
 text = "Game Over"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RestartButton" type="Button" parent="UICanvas/GameOverUI/VBoxContainer"]
+margin_top = 91.0
+margin_right = 357.0
+margin_bottom = 136.0
+custom_fonts/font = ExtResource( 9 )
+text = "Start Again"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -177,10 +196,10 @@ z_index = -10
 current = true
 
 [node name="Background" type="ColorRect" parent="Camera2D"]
-margin_left = -9795.15
-margin_top = -10180.0
-margin_right = 10204.9
-margin_bottom = 9819.98
+margin_left = -9794.03
+margin_top = -10169.9
+margin_right = 10206.0
+margin_bottom = 9830.07
 color = Color( 0.501961, 0.552941, 1, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
