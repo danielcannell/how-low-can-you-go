@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://Enemies/EnemyManager.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Enemies/Jelly.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Art/LargeFont.tres" type="DynamicFont" id=8]
 [ext_resource path="res://Art/MediumFont.tres" type="DynamicFont" id=9]
+[ext_resource path="res://Art/SmallFont.tres" type="DynamicFont" id=10]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10000, 20 )
@@ -191,6 +192,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="DepthLabel" type="Label" parent="UICanvas"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 77.0
+margin_bottom = 14.0
+custom_fonts/font = ExtResource( 10 )
+text = "Depth: 0 m"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Camera2D" type="Camera2D" parent="."]
 z_index = -10
 current = true
@@ -224,16 +236,6 @@ Shark = ExtResource( 5 )
 Jelly = ExtResource( 7 )
 
 [node name="GUI" type="CanvasLayer" parent="."]
-
-[node name="DepthLabel" type="Label" parent="GUI"]
-margin_left = 6.92957
-margin_top = 6.71958
-margin_right = 83.9296
-margin_bottom = 20.7196
-text = "Depth: 0 m"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Rays" type="Sprite" parent="."]
 material = SubResource( 3 )
