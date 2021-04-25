@@ -10,6 +10,7 @@
 [ext_resource path="res://Art/LargeFont.tres" type="DynamicFont" id=8]
 [ext_resource path="res://Art/MediumFont.tres" type="DynamicFont" id=9]
 [ext_resource path="res://Enemies/Angler.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Art/SmallFont.tres" type="DynamicFont" id=11]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10000, 20 )
@@ -82,36 +83,36 @@ vec4 screen(vec4 base, vec4 blend){
 
 void fragment()
 {
-	
+
 	// Rotate, skew and move the UVs
 	vec2 transformed_uv = ( rotate(angle) * (UV - position) )  / ( (UV.y + spread) - (UV.y * spread) );
-	
+
 	// Animate the ray according the the new transformed UVs
 	vec2 ray1 = vec2(transformed_uv.x * ray1_density + sin(TIME * 0.1 * speed) * (ray1_density * 0.2) + seed, 1.0);
 	vec2 ray2 = vec2(transformed_uv.x * ray2_density + sin(TIME * 0.2 * speed) * (ray1_density * 0.2) + seed, 1.0);
-	
+
 	// Cut off the ray's edges
 	float cut = step(cutoff, transformed_uv.x) * step(cutoff, 1.0 - transformed_uv.x);
 	ray1 *= cut;
 	ray2 *= cut;
-	
+
 	// Apply the noise pattern (i.e. create the rays)
 	float rays;
-	
+
 	if (hdr){
-		// This is not really HDR, but check this to not clamp the two merged rays making 
+		// This is not really HDR, but check this to not clamp the two merged rays making
 		// their values go over 1.0. Can make for some nice effect
 		rays = noise(ray1) + (noise(ray2) * ray2_intensity);
 	}
 	else{
 		 rays = clamp(0., 1., noise(ray1) + (noise(ray2) * ray2_intensity));
 	}
-	
+
 	// Fade out edges
 	rays *= smoothstep(0.0, falloff, (1.0 - UV.y)); // Bottom
 	rays *= smoothstep(0.0 + cutoff, edge_fade + cutoff, transformed_uv.x); // Left
 	rays *= smoothstep(0.0 + cutoff, edge_fade + cutoff, 1.0 - transformed_uv.x); // Right
-	
+
 	// Color to the rays
 	vec3 shine = vec3(rays) * color.rgb;
 
@@ -119,7 +120,7 @@ void fragment()
 	// but take a look at https://godotshaders.com/snippet/blending-modes/ for more.
 	// With \"Screen\" blend mode:
 	shine = screen(texture(SCREEN_TEXTURE, SCREEN_UV), vec4(color)).rgb;
-	
+
 	COLOR = vec4(shine, rays * color.a);
 }"
 
@@ -192,6 +193,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="DepthLabel" type="Label" parent="UICanvas"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 77.0
+margin_bottom = 14.0
+custom_fonts/font = ExtResource( 11 )
+text = "Depth: 0 m"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Camera2D" type="Camera2D" parent="."]
 z_index = -10
 current = true
@@ -226,16 +238,6 @@ Jelly = ExtResource( 7 )
 Angler = ExtResource( 10 )
 
 [node name="GUI" type="CanvasLayer" parent="."]
-
-[node name="DepthLabel" type="Label" parent="GUI"]
-margin_left = 6.92957
-margin_top = 6.71958
-margin_right = 83.9296
-margin_bottom = 20.7196
-text = "Depth: 0 m"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Rays" type="Sprite" parent="."]
 material = SubResource( 3 )

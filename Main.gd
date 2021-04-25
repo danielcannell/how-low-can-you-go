@@ -7,7 +7,7 @@ const Harpoon = preload("res://Harpoon/Harpoon.tscn")
 
 onready var camera := $Camera2D
 onready var background := $Camera2D/Background
-onready var depth_label := $GUI/DepthLabel
+onready var depth_label := $UICanvas/DepthLabel
 onready var canvas_modulate := $Camera2D/CanvasModulate
 onready var game_over_ui := $UICanvas/GameOverUI
 onready var restart_button := $UICanvas/GameOverUI/VBoxContainer/RestartButton

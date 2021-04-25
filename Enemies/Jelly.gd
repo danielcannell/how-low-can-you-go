@@ -13,7 +13,7 @@ func dps() -> float:
 
 
 func update_light() -> void:
-    light.energy = (1 - Globals.color_scale) * 0.35
+    light.energy = (1 - Globals.color_scale) * 0.83
 
 
 func _process(delta):
