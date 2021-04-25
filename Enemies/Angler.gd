@@ -97,9 +97,10 @@ func _look_angle(a: Vector2, b: Vector2) -> float:
 func _physics_process(delta: float) -> void:
     var player_vec: Vector2 = Globals.player_position - self.position;
 
+    speed = max(MIN_SPEED, speed - (DRAG * delta))
+
     match current_state:
         State.DRIFTING:
-            speed = max(MIN_SPEED, speed - (DRAG * delta))
             var move_vec = _look_vec() * speed * delta
             move_and_collide(move_vec)
 
@@ -108,7 +109,6 @@ func _physics_process(delta: float) -> void:
 
         State.ATTACK, State.ENDLESS_ATTACK:
             _look_at(Globals.player_position)
-            speed = max(MIN_SPEED, speed - (DRAG * delta))
             var move_vec = _look_vec() * speed * delta
             move_and_collide(move_vec)
 
@@ -117,7 +117,6 @@ func _physics_process(delta: float) -> void:
                     set_state(State.DRIFTING)
 
         State.DEAD:
-            speed = max(MIN_SPEED, speed - (DRAG * delta))
             var move_vec = Vector2.UP * delta * speed
             move_and_collide(move_vec)
 

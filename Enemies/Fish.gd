@@ -7,6 +7,7 @@ enum State {
 }
 
 onready var sprite = $Sprite
+onready var leak := $BloodLeak
 
 const TURN_SPEED := 20.0
 const INITIAL_SPEED := 300.0
@@ -26,6 +27,7 @@ var speed := 0.0
 # Override on_dead so that we don't get cleaned up automatically
 func on_dead() -> void:
     alive = false
+    leak.emitting = true
 
 
 func get_splatter_params() -> Dictionary:
@@ -35,6 +37,15 @@ func get_splatter_params() -> Dictionary:
 func zombify() -> void:
     current_state = State.ZOMBIE
     layers = 0
+
+
+# Separate from on_dead to allow that to be overriden
+func out_of_bounds() -> void:
+    alive = false
+    leak.emitting = false
+    sprite.visible = false
+    yield(get_tree().create_timer(4), "timeout")
+    queue_free()
 
 
 func dps() -> float:
