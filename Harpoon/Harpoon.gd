@@ -83,8 +83,10 @@ func _physics_process(delta: float) -> void:
                 else:
                     hit.append(b)
 
-                b.damage(10)
-                _spawn_blood(b.get_splatter_params())
+                if b.has_method("damage"):
+                    b.damage(10)
+                    _spawn_blood(b.get_splatter_params())
+
                 if b.alive:
                     enemy = b
                     state = State.STUCK

@@ -194,7 +194,12 @@ func _physics_process(delta: float) -> void:
     a -= velocity - Vector2(0, 200)
 
     velocity += delta * a
-    velocity = move_and_slide(velocity)
+
+    var result := move_and_collide(velocity * delta, false)
+    if result != null:
+        if result.collider is RigidBody2D:
+            result.collider.apply_central_impulse(-result.normal * 100)
+        velocity = velocity.slide(result.normal) * 0.2
 
     Globals.player_position = position
 

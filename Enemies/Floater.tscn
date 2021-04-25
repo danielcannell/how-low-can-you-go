@@ -9,7 +9,7 @@ radius = 30.0
 [sub_resource type="OccluderPolygon2D" id=2]
 polygon = PoolVector2Array( -5.86146, -31.5824, 13.8996, -29.6904, 27.3539, -18.7587, 33.8709, -0.889687, 26.7233, 20.5532, 14.1098, 29.3826, -1.23653, 31.4848, -21.8385, 25.5985, -31.9292, 9.62151, -30.8781, -10.7702, -20.5771, -25.9064 )
 
-[node name="Node2D" type="KinematicBody2D"]
+[node name="Node2D" type="RigidBody2D"]
 collision_layer = 4
 collision_mask = 0
 script = ExtResource( 2 )
