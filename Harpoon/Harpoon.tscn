@@ -5,7 +5,7 @@
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 2.33334
-height = 45.0
+height = 50.8853
 
 [node name="Harpoon" type="Area2D"]
 visible = false
