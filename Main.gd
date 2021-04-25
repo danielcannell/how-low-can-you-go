@@ -44,6 +44,17 @@ func on_player_died():
     game_over_ui.visible = true
 
 
+func depth_scale(depth: float) -> float:
+    # Depth at which we reach 50% brightness
+    var mid_point := 40.0 * fall_rate
+
+    # Time scale for the change from light to dark
+    var scale := 40.0 * fall_rate
+
+    # Logistic function
+    return 1.0 - 1.0 / (1.0 + exp(-(depth - mid_point) / scale))
+
+
 func _process(delta: float) -> void:
     var vp := camera.get_viewport()
     Globals.screen_height = vp.size.y
@@ -58,7 +69,7 @@ func _process(delta: float) -> void:
     Globals.depth += delta * fall_rate
     camera.position.y = Globals.depth
 
-    Globals.color_scale = exp(-Globals.depth * 2e-4)
+    Globals.color_scale = depth_scale(Globals.depth) / depth_scale(0.0)
     background.color = color_from_hsl(0.64, 0.4 + 0.6 * Globals.color_scale, 0.25 + (0.6 * Globals.color_scale))
     canvas_modulate.color = Color.from_hsv(0, 0, min(0.8, Globals.color_scale))
 
