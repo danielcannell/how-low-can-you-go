@@ -1,4 +1,4 @@
-extends Node2D
+extends Node
 
 
 const Player = preload("res://Player/Player.tscn")
@@ -9,6 +9,7 @@ onready var camera := $Camera2D
 onready var background := $Camera2D/Background
 onready var depth_label := $GUI/DepthLabel
 onready var canvas_modulate := $Camera2D/CanvasModulate
+onready var game_over_ui := $UICanvas/GameOverUI
 
 var fall_rate := 50.0
 var prev_rounded_depth := 0.0
@@ -29,6 +30,12 @@ func spawn_player() -> void:
     player.set_harpoon(harpoon)
     harpoon.set_player(player)
     harpoon.connect("bool_splatter", self, "_on_blood_splatter")
+
+    player.connect("died", self, "on_player_died")
+
+
+func on_player_died():
+    game_over_ui.visible = true
 
 
 func _process(delta: float) -> void:

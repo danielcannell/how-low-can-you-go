@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://Enemies/EnemyManager.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Enemies/Shark.tscn" type="PackedScene" id=5]
 [ext_resource path="res://OutOfBounds.gd" type="Script" id=6]
 [ext_resource path="res://Enemies/Jelly.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Art/LargeFont.tres" type="DynamicFont" id=8]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10000, 20 )
@@ -141,8 +142,35 @@ shader_param/seed = 7.0
 [sub_resource type="NoiseTexture" id=5]
 noise = SubResource( 4 )
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node"]
 script = ExtResource( 1 )
+
+[node name="UICanvas" type="CanvasLayer" parent="."]
+
+[node name="GameOverUI" type="Control" parent="UICanvas"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GameOverLabel" type="Label" parent="UICanvas/GameOverUI"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -178.5
+margin_top = -43.5
+margin_right = 178.5
+margin_bottom = 43.5
+custom_fonts/font = ExtResource( 8 )
+text = "Game Over"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Camera2D" type="Camera2D" parent="."]
 z_index = -10

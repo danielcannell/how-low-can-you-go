@@ -1,6 +1,9 @@
 extends KinematicBody2D
 
 
+signal died();
+
+
 onready var HealthBar := preload("res://Enemies/HealthBar.tscn")
 
 
@@ -29,6 +32,7 @@ var gun_right_transform = Transform2D(-PI / 3.0, Vector2(25, -7))
 var gun_left_transform = Transform2D(PI / 3.0, Vector2(-25, -7))
 var health := 100.0
 var healthbar = null
+var alive := true
 
 
 func _ready() -> void:
@@ -123,23 +127,36 @@ func update_light() -> void:
     spotlight.energy = 1 - Globals.color_scale
 
 
+func update_health(delta: float) -> void:
+    for b in damage_zone.get_overlapping_bodies():
+        if b.has_method("dps"):
+            health -= delta * b.dps()
+
+    healthbar.set_percent(health / 100.0)
+
+    if alive && health < 0:
+        alive = false
+        emit_signal("died")
+
+
 func _process(_delta: float) -> void:
-    update_attack_state()
-    update_light()
+    if alive:
+        update_attack_state()
+        update_light()
 
 
 func _physics_process(delta: float) -> void:
-
     var a := Vector2.ZERO
 
-    if Input.is_action_pressed("up"):
-        a.y -= 1000
-    if Input.is_action_pressed("down"):
-        a.y += 1000
-    if Input.is_action_pressed("left"):
-        a.x -= 1000
-    if Input.is_action_pressed("right"):
-        a.x += 1000
+    if alive:
+        if Input.is_action_pressed("up"):
+            a.y -= 1000
+        if Input.is_action_pressed("down"):
+            a.y += 1000
+        if Input.is_action_pressed("left"):
+            a.x -= 1000
+        if Input.is_action_pressed("right"):
+            a.x += 1000
 
     # Get viewport rect in canvas coordinates
     var visible = get_viewport_transform().xform_inv(get_viewport_rect())
@@ -181,7 +198,4 @@ func _physics_process(delta: float) -> void:
 
     Globals.player_position = position
 
-    for b in damage_zone.get_overlapping_bodies():
-        if b.has_method("dps"):
-            health -= delta * b.dps()
-    healthbar.set_percent(health / 100.0)
+    update_health(delta)
