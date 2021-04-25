@@ -2,7 +2,7 @@ extends "res://Enemies/EnemyBase.gd"
 
 const RETHINK_TIME := 1.0
 
-onready var sprite: AnimatedSprite = $Sprite
+onready var sprite: Sprite = $Sprite
 onready var eye := $Light2D
 
 const speed_y_up := 120.0
