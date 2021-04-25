@@ -70,7 +70,6 @@ func _process(delta: float) -> void:
     camera.position.y = Globals.depth
 
     Globals.color_scale = depth_scale(Globals.depth) / depth_scale(0.0)
-    print(Globals.color_scale)
     background.color = color_from_hsl(0.64, 0.4 + 0.6 * Globals.color_scale, 0.25 + (0.6 * Globals.color_scale))
     canvas_modulate.color = Color.from_hsv(0, 0, min(0.8, Globals.color_scale))
 
