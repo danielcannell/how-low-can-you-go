@@ -10,6 +10,6 @@ func set_params(params):
     amount = params['amount']
 
 
-func _process(delta):
+func _process(_delta):
     if running and not emitting:
         queue_free()
