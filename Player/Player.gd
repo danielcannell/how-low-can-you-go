@@ -1,6 +1,9 @@
 extends KinematicBody2D
 
 
+onready var HealthBar := preload("res://Enemies/HealthBar.tscn")
+
+
 enum SwimState { IDLE, LEFT, RIGHT }
 enum AttackState { IDLE, AIM, FIRE }
 
@@ -11,6 +14,7 @@ onready var spotlight := $Spotlight
 onready var arealight := $AreaLight
 onready var gun := $Gun
 onready var gunblast := $GunBlast
+onready var damage_zone := $DamageZone
 
 
 const HARPOON_KICK = 400
@@ -23,10 +27,16 @@ var attack_state: int = AttackState.IDLE
 var gun_idle_transform = Transform2D()
 var gun_right_transform = Transform2D(-PI / 3.0, Vector2(25, -7))
 var gun_left_transform = Transform2D(PI / 3.0, Vector2(-25, -7))
+var health := 100.0
+var healthbar = null
 
 
 func _ready() -> void:
     gun_idle_transform = gun.transform
+
+    healthbar = HealthBar.instance()
+    healthbar.position = Vector2(0, -20)
+    add_child(healthbar)
 
 
 func set_harpoon(h) -> void:
@@ -170,3 +180,8 @@ func _physics_process(delta: float) -> void:
     velocity = move_and_slide(velocity)
 
     Globals.player_position = position
+
+    for b in damage_zone.get_overlapping_bodies():
+        if b.has_method("dps"):
+            health -= delta * b.dps()
+    healthbar.set_percent(health / 100.0)

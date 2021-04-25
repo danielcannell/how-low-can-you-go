@@ -31,6 +31,10 @@ func on_dead() -> void:
     eye.energy = 0
 
 
+func dps() -> float:
+    return 10.0
+
+
 func get_splatter_params() -> Dictionary:
     return {"amount": 70}
 
