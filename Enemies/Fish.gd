@@ -28,6 +28,7 @@ var speed := 0.0
 func on_dead() -> void:
     alive = false
     leak.emitting = true
+    sprite.frame = 1 + (randi() % 2)
 
 
 func get_splatter_params() -> Dictionary:
