@@ -13,27 +13,71 @@ const SPAWN_RATE := 0.5
 
 
 onready var enemy_types = [
-    [20, null],
-    [100, Floater],
-    [100, Jelly],
-    [50, Fish],
-    [4, Angler],
-    [2, Shark],
+    [0.2, [
+        [100, null],
+        [20, Fish],
+    ]],
+    [0.1, [
+        [100, null],
+        [100, Jelly],
+        [50, Fish],
+    ]],
+    [0.2, [
+        [20, null],
+        [100, Floater],
+        [100, Jelly],
+        [50, Fish],
+        [2, Shark],
+    ]],
+    [0.2, [
+        [20, null],
+        [100, Floater],
+        [100, Jelly],
+        [50, Fish],
+        [5, Shark],
+    ]],
+    [0.3, [
+        [20, null],
+        [100, Floater],
+        [100, Jelly],
+        [50, Fish],
+        [10, Angler],
+        [2, Shark],
+    ]]
 ]
-var _total_enemy_type_weight := 0  # cache
 
 
-func _ready() -> void:
-    for typ in enemy_types:
-        _total_enemy_type_weight += typ[0]
+func _ready():
+    var total_weight := 0.0
+    for t in enemy_types:
+        total_weight += t[0]
+    for t in enemy_types:
+        t[0] = t[0] / total_weight
+
+    for t in enemy_types:
+        var table = t[1]
+
+        total_weight = 0.0
+        for typ in table:
+            total_weight += typ[0]
+
+        for typ in table:
+            typ[0] = typ[0] / total_weight
 
 
 func enemy_type_to_spawn() -> PackedScene:
-    var which := randi() % _total_enemy_type_weight
-    for typ in enemy_types:
-        which -= typ[0]
-        if which < 0:
-            return typ[1]
+    var table_choice := 0.2 * randf() + 0.8 * (1.0 - Globals.color_scale)
+    var enemy_choice := randf()
+
+    for t in enemy_types:
+        table_choice -= t[0]
+        if table_choice < 0:
+            var table = t[1]
+            for typ in table:
+                enemy_choice -= typ[0]
+                if enemy_choice < 0.0:
+                    return typ[1]
+
     return null
 
 
