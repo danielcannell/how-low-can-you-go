@@ -19,9 +19,6 @@ var prev_rounded_depth := 0.0
 func _ready() -> void:
     Globals.depth = 0.0
 
-    var vp := camera.get_viewport()
-    Globals.screen_height = vp.size.y
-    Globals.screen_width = vp.size.x
     spawn_player()
 
     restart_button.connect("button_up", self, "restart_game")
@@ -48,6 +45,16 @@ func on_player_died():
 
 
 func _process(delta: float) -> void:
+    var vp := camera.get_viewport()
+    Globals.screen_height = vp.size.y
+    Globals.screen_width = vp.size.x
+
+    # Bubbles at the bottom
+    var bubbles: Particles2D = $Camera2D/Particles2D
+    var shader: ParticlesMaterial = bubbles.process_material
+    shader.emission_box_extents.x = vp.size.x
+    bubbles.position = Vector2(0, vp.size.y / 2.0)
+
     Globals.depth += delta * fall_rate
     camera.position.y = Globals.depth
 

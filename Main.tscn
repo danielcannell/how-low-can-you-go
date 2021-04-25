@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://Enemies/EnemyManager.gd" type="Script" id=2]
@@ -11,9 +11,39 @@
 [ext_resource path="res://Art/MediumFont.tres" type="DynamicFont" id=9]
 [ext_resource path="res://Enemies/Angler.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Art/SmallFont.tres" type="DynamicFont" id=11]
+[ext_resource path="res://Art/6x6-bubble.png" type="Texture" id=12]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10000, 20 )
+
+[sub_resource type="Shader" id=9]
+code = "shader_type canvas_item;
+render_mode light_only;
+"
+
+[sub_resource type="ShaderMaterial" id=10]
+shader = SubResource( 9 )
+
+[sub_resource type="Gradient" id=11]
+offsets = PoolRealArray( 0, 0.363636, 0.65368, 1 )
+colors = PoolColorArray( 0.529412, 0.529412, 0.529412, 0, 0.0235294, 0.964706, 0.552941, 1, 0.0235294, 0.964706, 0.552941, 1, 0.964706, 1, 0.996078, 0 )
+
+[sub_resource type="GradientTexture" id=12]
+gradient = SubResource( 11 )
+
+[sub_resource type="ParticlesMaterial" id=8]
+emission_shape = 2
+emission_box_extents = Vector3( 800, 1, 0 )
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+spread = 10.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 100.0
+initial_velocity_random = 0.3
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale_random = 0.3
+color_ramp = SubResource( 12 )
 
 [sub_resource type="Shader" id=2]
 code = "/*
@@ -228,6 +258,16 @@ position = Vector2( 0, -2000 )
 shape = SubResource( 1 )
 
 [node name="CanvasModulate" type="CanvasModulate" parent="Camera2D"]
+
+[node name="Particles2D" type="Particles2D" parent="Camera2D"]
+modulate = Color( 0.101961, 1, 0, 1 )
+material = SubResource( 10 )
+amount = 100
+lifetime = 10.0
+preprocess = 5.0
+visibility_rect = Rect2( -1000, -1000, 2000, 2000 )
+process_material = SubResource( 8 )
+texture = ExtResource( 12 )
 
 [node name="EnemyManager" type="Node2D" parent="."]
 script = ExtResource( 2 )
