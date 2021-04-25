@@ -39,7 +39,7 @@ material = SubResource( 3 )
 texture = ExtResource( 1 )
 normal_map = ExtResource( 4 )
 
-[node name="Sprite2" type="Sprite" parent="."]
+[node name="Glow" type="Sprite" parent="."]
 material = SubResource( 4 )
 texture = ExtResource( 3 )
 normal_map = ExtResource( 1 )

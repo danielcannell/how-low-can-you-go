@@ -1,6 +1,7 @@
 extends "res://Enemies/DrifterBase.gd"
 
 onready var light = $Light2D
+onready var glow = $Glow
 
 var obj_scale: float = 1.0
 
@@ -13,7 +14,7 @@ func _ready() -> void:
 
     # Pass in per instance state through the modulate uniform
     var phase := rand_range(0.0, 1.0)
-    modulate = Color(phase, 0.0, 0.0, 1.0)
+    glow.modulate = Color(phase, 0.0, 0.0, 1.0)
 
 func dps() -> float:
     return 5.0
