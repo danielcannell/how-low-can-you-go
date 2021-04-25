@@ -10,6 +10,7 @@ onready var arrow := $Arrow
 onready var spotlight := $Spotlight
 onready var arealight := $AreaLight
 onready var gun := $Gun
+onready var gunblast := $GunBlast
 
 
 const HARPOON_KICK = 400
@@ -64,6 +65,20 @@ func update_swim_state(a: Vector2) -> void:
                 gun.transform = gun_right_transform
 
 
+func _mouse_vec() -> Vector2:
+    var mouse_dir := get_global_mouse_position() - position
+    return Vector2(cos(mouse_dir.angle()), sin(mouse_dir.angle()))
+
+
+func _gun_blast(direction: Vector2, offset: float) -> void:
+    gunblast.restart()
+    var mouse_dir := get_global_mouse_position() - position
+    var mouse_vec = Vector2(cos(mouse_dir.angle()), sin(mouse_dir.angle()))
+    gunblast.process_material.direction = Vector3(direction.x, direction.y, 0)
+    gunblast.transform = Transform2D(0, mouse_vec  * offset)
+    gunblast.emitting = true
+
+
 func update_attack_state() -> void:
     match attack_state:
         AttackState.IDLE:
@@ -80,6 +95,8 @@ func update_attack_state() -> void:
                     harpoon.fire(position, velocity, arrow.rotation)
                     velocity -= HARPOON_KICK * Vector2(1, 0).rotated(arrow.rotation)
                     gun.set_animation("unloaded")
+                    _gun_blast(_mouse_vec(), 20)
+
 
         AttackState.FIRE:
             pass
