@@ -12,7 +12,6 @@ enum AttackState { IDLE, AIM, FIRE }
 
 
 onready var sprite := $Sprite
-onready var arrow := $Arrow
 onready var spotlight := $Spotlight
 onready var arealight := $AreaLight
 onready var gun := $Gun
@@ -33,6 +32,7 @@ var gun_left_transform = Transform2D(PI / 3.0, Vector2(-25, -7))
 var health := 100.0
 var healthbar = null
 var alive := true
+var aim_dir := Vector2(0.0, 0.0)
 
 
 func _ready() -> void:
@@ -79,11 +79,6 @@ func update_swim_state(a: Vector2) -> void:
                 gun.transform = gun_right_transform
 
 
-func _mouse_vec() -> Vector2:
-    var mouse_dir := get_global_mouse_position() - position
-    return Vector2(cos(mouse_dir.angle()), sin(mouse_dir.angle()))
-
-
 func _gun_blast(direction: Vector2, offset: float) -> void:
     gunblast.restart()
     var mouse_dir := get_global_mouse_position() - position
@@ -97,32 +92,25 @@ func update_attack_state() -> void:
     match attack_state:
         AttackState.IDLE:
             if Input.is_action_pressed("attack"):
-                arrow.visible = true
                 attack_state = AttackState.AIM
 
         AttackState.AIM:
             if !Input.is_action_pressed("attack"):
-                arrow.visible = false
                 attack_state = AttackState.FIRE
 
                 if harpoon != null:
-                    harpoon.fire(position, velocity, arrow.rotation)
-                    velocity -= HARPOON_KICK * Vector2(1, 0).rotated(arrow.rotation)
+                    harpoon.fire(position, velocity, aim_dir.angle())
+                    velocity -= HARPOON_KICK * aim_dir
                     gun.set_animation("unloaded")
-                    _gun_blast(_mouse_vec(), 20)
+                    _gun_blast(aim_dir, 20)
 
 
         AttackState.FIRE:
             pass
 
-    if attack_state == AttackState.AIM:
-        var mouse_dir := get_global_mouse_position() - position
-        arrow.rotation = mouse_dir.angle()
-
 
 func update_light() -> void:
-    var mouse_dir := get_global_mouse_position() - position
-    spotlight.rotation = mouse_dir.angle()
+    spotlight.rotation = aim_dir.angle()
     arealight.energy = 1 - Globals.color_scale
     spotlight.energy = 1 - Globals.color_scale
 
@@ -142,6 +130,7 @@ func update_health(delta: float) -> void:
 
 func _process(_delta: float) -> void:
     if alive:
+        aim_dir = (get_global_mouse_position() - position).normalized()
         update_attack_state()
         update_light()
 
