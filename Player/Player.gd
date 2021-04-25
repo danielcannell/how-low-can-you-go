@@ -17,6 +17,7 @@ onready var arealight := $AreaLight
 onready var gun := $Gun
 onready var gunblast := $GunBlast
 onready var damage_zone := $DamageZone
+onready var bubbles := $Bubbles
 
 
 const HARPOON_KICK = 400
@@ -125,6 +126,7 @@ func update_health(delta: float) -> void:
 
     if alive && health < 0:
         alive = false
+        bubbles.emitting = false
         emit_signal("died")
 
 

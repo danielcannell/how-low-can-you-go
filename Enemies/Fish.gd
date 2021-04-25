@@ -34,6 +34,7 @@ func get_splatter_params() -> Dictionary:
 
 func zombify() -> void:
     current_state = State.ZOMBIE
+    layers = 0
 
 
 func dps() -> float:
