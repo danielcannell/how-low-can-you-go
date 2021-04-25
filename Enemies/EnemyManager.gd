@@ -5,6 +5,7 @@ export (PackedScene) var Floater
 export (PackedScene) var Fish
 export (PackedScene) var Shark
 export (PackedScene) var Jelly
+export (PackedScene) var Angler
 
 
 var next_spawn_time := 0.0
@@ -16,6 +17,7 @@ onready var enemy_types = [
     [100, Floater],
     [100, Jelly],
     [50, Fish],
+    [4, Angler],
     [2, Shark],
 ]
 var _total_enemy_type_weight := 0  # cache

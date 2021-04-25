@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://Enemies/EnemyManager.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Enemies/Jelly.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Art/LargeFont.tres" type="DynamicFont" id=8]
 [ext_resource path="res://Art/MediumFont.tres" type="DynamicFont" id=9]
+[ext_resource path="res://Enemies/Angler.tscn" type="PackedScene" id=10]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10000, 20 )
@@ -222,6 +223,7 @@ Floater = ExtResource( 3 )
 Fish = ExtResource( 4 )
 Shark = ExtResource( 5 )
 Jelly = ExtResource( 7 )
+Angler = ExtResource( 10 )
 
 [node name="GUI" type="CanvasLayer" parent="."]
 
