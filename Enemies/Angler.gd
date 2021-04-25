@@ -12,9 +12,10 @@ const TURN_SPEED := 5.0
 const INITIAL_SPEED := 50.0
 const MIN_SPEED := 15.0
 const DRAG := 20.0
-export var attack_dist: float = 100;
-export var attack_speed: float = 250.0;
-export var drift_speed: float = 25.0;
+const attack_dist: float = 150.0;
+const attack_speed: float = 350.0;
+const drift_speed: float = 25.0;
+const attack_end_dist: float = 310.0;
 
 
 var current_state := -1
@@ -103,7 +104,9 @@ func _physics_process(delta: float) -> void:
             speed = max(MIN_SPEED, speed - (DRAG * delta))
             var move_vec = _look_vec() * speed * delta
             move_and_collide(move_vec)
-            set_state(State.DRIFTING)
+
+            if player_vec.length() > attack_end_dist:
+                set_state(State.DRIFTING)
 
         State.DEAD:
             speed = max(MIN_SPEED, speed - (DRAG * delta))
