@@ -5,15 +5,16 @@ extends "res://Enemies/EnemyBase.gd"
 enum State {
     DRIFTING,
     ATTACK,
+    ENDLESS_ATTACK,
     DEAD
 }
 
 const TURN_SPEED := 5.0
 const INITIAL_SPEED := 50.0
 const MIN_SPEED := 15.0
-const DRAG := 20.0
+const DRAG := 30.0
 const attack_dist: float = 150.0;
-const attack_speed: float = 350.0;
+const attack_speed: float = 330.0;
 const drift_speed: float = 25.0;
 const attack_end_dist: float = 310.0;
 
@@ -27,6 +28,7 @@ var speed := 0.0
 
 onready var sprite: Sprite = $Sprite
 onready var lure := $Light2D
+onready var leak := $BloodLeak
 
 const speed_y_up := 120.0
 const speed_y_down := 20.0
@@ -36,6 +38,7 @@ const dead_frame = 2;
 var lure_offset_from_sprite := Vector2.ZERO
 
 func _ready() -> void:
+    leak.emitting = false
     set_max_hp(19.0)
     lure_offset_from_sprite = lure.position - sprite.position
 
@@ -47,6 +50,8 @@ func set_damage_state(state: float) -> void:
     state = clamp(state, 0, 1)
     var frame = floor((1-state) * dead_frame)
     sprite.frame = frame
+    if state > 0:
+        leak.emitting = true
 
 
 func on_dead() -> void:
@@ -69,6 +74,8 @@ func get_splatter_params() -> Dictionary:
 func damage(amount: float) -> void:
     .damage(amount)
     set_damage_state(hp / max_hp)
+    if alive:
+        set_state(State.ENDLESS_ATTACK)
 
 
 func _look_at(point: Vector2) -> void:
@@ -99,14 +106,15 @@ func _physics_process(delta: float) -> void:
             if player_vec.length() < attack_dist && _look_angle(player_vec.normalized(), _look_vec()) < deg2rad(60):
                 set_state(State.ATTACK)
 
-        State.ATTACK:
+        State.ATTACK, State.ENDLESS_ATTACK:
             _look_at(Globals.player_position)
             speed = max(MIN_SPEED, speed - (DRAG * delta))
             var move_vec = _look_vec() * speed * delta
             move_and_collide(move_vec)
 
-            if player_vec.length() > attack_end_dist:
-                set_state(State.DRIFTING)
+            if current_state == State.ATTACK:
+                if player_vec.length() > attack_end_dist:
+                    set_state(State.DRIFTING)
 
         State.DEAD:
             speed = max(MIN_SPEED, speed - (DRAG * delta))
@@ -123,7 +131,7 @@ func set_state(new_state: int) -> void:
         State.DRIFTING:
             speed = drift_speed * 2
 
-        State.ATTACK:
+        State.ATTACK, State.ENDLESS_ATTACK:
             speed = attack_speed
 
         State.DEAD:
