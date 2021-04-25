@@ -1,6 +1,12 @@
 extends KinematicBody2D
 
 
+signal died();
+
+
+onready var HealthBar := preload("res://Enemies/HealthBar.tscn")
+
+
 enum SwimState { IDLE, LEFT, RIGHT }
 enum AttackState { IDLE, AIM, FIRE }
 
@@ -11,6 +17,7 @@ onready var spotlight := $Spotlight
 onready var arealight := $AreaLight
 onready var gun := $Gun
 onready var gunblast := $GunBlast
+onready var damage_zone := $DamageZone
 
 
 const HARPOON_KICK = 400
@@ -23,10 +30,17 @@ var attack_state: int = AttackState.IDLE
 var gun_idle_transform = Transform2D()
 var gun_right_transform = Transform2D(-PI / 3.0, Vector2(25, -7))
 var gun_left_transform = Transform2D(PI / 3.0, Vector2(-25, -7))
+var health := 100.0
+var healthbar = null
+var alive := true
 
 
 func _ready() -> void:
     gun_idle_transform = gun.transform
+
+    healthbar = HealthBar.instance()
+    healthbar.position = Vector2(0, -20)
+    add_child(healthbar)
 
 
 func set_harpoon(h) -> void:
@@ -113,23 +127,36 @@ func update_light() -> void:
     spotlight.energy = 1 - Globals.color_scale
 
 
+func update_health(delta: float) -> void:
+    for b in damage_zone.get_overlapping_bodies():
+        if b.has_method("dps"):
+            health -= delta * b.dps()
+
+    healthbar.set_percent(health / 100.0)
+
+    if alive && health < 0:
+        alive = false
+        emit_signal("died")
+
+
 func _process(_delta: float) -> void:
-    update_attack_state()
-    update_light()
+    if alive:
+        update_attack_state()
+        update_light()
 
 
 func _physics_process(delta: float) -> void:
-
     var a := Vector2.ZERO
 
-    if Input.is_action_pressed("up"):
-        a.y -= 1000
-    if Input.is_action_pressed("down"):
-        a.y += 1000
-    if Input.is_action_pressed("left"):
-        a.x -= 1000
-    if Input.is_action_pressed("right"):
-        a.x += 1000
+    if alive:
+        if Input.is_action_pressed("up"):
+            a.y -= 1000
+        if Input.is_action_pressed("down"):
+            a.y += 1000
+        if Input.is_action_pressed("left"):
+            a.x -= 1000
+        if Input.is_action_pressed("right"):
+            a.x += 1000
 
     # Get viewport rect in canvas coordinates
     var visible = get_viewport_transform().xform_inv(get_viewport_rect())
@@ -170,3 +197,5 @@ func _physics_process(delta: float) -> void:
     velocity = move_and_slide(velocity)
 
     Globals.player_position = position
+
+    update_health(delta)

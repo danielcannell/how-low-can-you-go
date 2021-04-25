@@ -9,5 +9,9 @@ func _ready() -> void:
     drift = Vector2((randf() - 0.5) * DRIFT_RATE_X, (-randf()) * DRIFT_RATE_Y)
 
 
-func _process(delta: float) -> void:
+func dps() -> float:
+    return 5.0
+
+
+func _process(_delta: float) -> void:
     drift = move_and_slide(drift)

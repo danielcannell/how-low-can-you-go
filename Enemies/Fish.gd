@@ -36,6 +36,10 @@ func zombify() -> void:
     current_state = State.ZOMBIE
 
 
+func dps() -> float:
+    return 1.0
+
+
 func _ready() -> void:
     set_max_hp(10.0)
     set_state(State.TURN)
