@@ -4,6 +4,7 @@ extends Node
 export (PackedScene) var Floater
 export (PackedScene) var Fish
 export (PackedScene) var Shark
+export (PackedScene) var Jelly
 
 
 var next_spawn_time := 0.0
@@ -13,6 +14,7 @@ const SPAWN_RATE := 0.5
 onready var enemy_types = [
     [20, null],
     [100, Floater],
+    [100, Jelly],
     [50, Fish],
     [2, Shark],
 ]

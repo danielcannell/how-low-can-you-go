@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://Enemies/EnemyManager.gd" type="Script" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Enemies/Fish.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Enemies/Shark.tscn" type="PackedScene" id=5]
 [ext_resource path="res://OutOfBounds.gd" type="Script" id=6]
+[ext_resource path="res://Enemies/Jelly.tscn" type="PackedScene" id=7]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10000, 20 )
@@ -43,6 +44,7 @@ script = ExtResource( 2 )
 Floater = ExtResource( 3 )
 Fish = ExtResource( 4 )
 Shark = ExtResource( 5 )
+Jelly = ExtResource( 7 )
 
 [node name="GUI" type="CanvasLayer" parent="."]
 

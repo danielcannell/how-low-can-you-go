@@ -1,14 +1,15 @@
 extends Particles2D
 
+var running = false;
 
 func run():
     emitting = true
-    yield(get_tree().create_timer(2.0), "timeout")
-    queue_free()
-
+    running = true
 
 func set_params(params):
     amount = params['amount']
 
-func _ready():
-    pass
+
+func _process(delta):
+    if running and not emitting:
+        queue_free()
