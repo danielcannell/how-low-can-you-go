@@ -333,7 +333,6 @@ Angler = ExtResource( 10 )
 [node name="GUI" type="CanvasLayer" parent="."]
 
 [node name="Rays" type="Sprite" parent="."]
-visible = false
 material = SubResource( 8 )
 position = Vector2( -34.5302, 235.073 )
 scale = Vector2( 1.99711, 2.40056 )
