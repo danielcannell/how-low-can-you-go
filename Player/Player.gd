@@ -130,7 +130,8 @@ func update_light() -> void:
 func update_health(delta: float) -> void:
     for b in damage_zone.get_overlapping_bodies():
         if b.has_method("dps"):
-            health -= delta * b.dps()
+            if b.alive:
+                health -= delta * b.dps()
 
     healthbar.set_percent(health / 100.0)
 
