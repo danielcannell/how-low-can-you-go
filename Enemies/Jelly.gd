@@ -11,6 +11,10 @@ func _ready() -> void:
     obj_scale = rand_range(0.9, 1.0)
     ._ready()
 
+    # Pass in per instance state through the modulate uniform
+    var phase := rand_range(0.0, 1.0)
+    modulate = Color(phase, 0.0, 0.0, 1.0)
+
 func dps() -> float:
     return 5.0
 
