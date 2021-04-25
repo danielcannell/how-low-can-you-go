@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://Enemies/EnemyManager.gd" type="Script" id=2]
@@ -16,7 +16,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10000, 20 )
 
-[sub_resource type="Shader" id=9]
+[sub_resource type="Shader" id=2]
 code = "shader_type canvas_item;
 render_mode light_only;
 
@@ -48,17 +48,17 @@ void light() {
     LIGHT.rgb = exp(brightness * 2.0) * hsv2rgb(vec3(light_hsv.x, 1.0, 1.0));
 }"
 
-[sub_resource type="ShaderMaterial" id=10]
-shader = SubResource( 9 )
+[sub_resource type="ShaderMaterial" id=3]
+shader = SubResource( 2 )
 
-[sub_resource type="Gradient" id=11]
+[sub_resource type="Gradient" id=4]
 offsets = PoolRealArray( 0, 0.363636, 0.65368, 1 )
 colors = PoolColorArray( 0.529412, 0.529412, 0.529412, 0, 0.0235294, 0.964706, 0.552941, 1, 0.0235294, 0.964706, 0.552941, 1, 0.964706, 1, 0.996078, 0 )
 
-[sub_resource type="GradientTexture" id=12]
-gradient = SubResource( 11 )
+[sub_resource type="GradientTexture" id=5]
+gradient = SubResource( 4 )
 
-[sub_resource type="ParticlesMaterial" id=8]
+[sub_resource type="ParticlesMaterial" id=6]
 emission_shape = 2
 emission_box_extents = Vector3( 800, 1, 0 )
 flag_disable_z = true
@@ -70,9 +70,9 @@ initial_velocity_random = 0.3
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale_random = 0.3
-color_ramp = SubResource( 12 )
+color_ramp = SubResource( 5 )
 
-[sub_resource type="Shader" id=2]
+[sub_resource type="Shader" id=7]
 code = "/*
 Shader from Godot Shaders - the free shader library.
 godotshaders.com/shader/god-rays
@@ -181,8 +181,8 @@ void fragment()
 	COLOR = vec4(shine, rays * color.a);
 }"
 
-[sub_resource type="ShaderMaterial" id=3]
-shader = SubResource( 2 )
+[sub_resource type="ShaderMaterial" id=8]
+shader = SubResource( 7 )
 shader_param/angle = -0.2
 shader_param/position = 0.0
 shader_param/spread = 0.064
@@ -197,10 +197,10 @@ shader_param/color = Color( 1, 0.988235, 0.286275, 0.8 )
 shader_param/hdr = true
 shader_param/seed = 7.0
 
-[sub_resource type="OpenSimplexNoise" id=4]
+[sub_resource type="OpenSimplexNoise" id=9]
 
-[sub_resource type="NoiseTexture" id=5]
-noise = SubResource( 4 )
+[sub_resource type="NoiseTexture" id=10]
+noise = SubResource( 9 )
 
 [node name="Main" type="Node"]
 script = ExtResource( 1 )
@@ -288,12 +288,12 @@ shape = SubResource( 1 )
 
 [node name="Particles2D" type="Particles2D" parent="Camera2D"]
 modulate = Color( 0.101961, 1, 0, 1 )
-material = SubResource( 10 )
+material = SubResource( 3 )
 amount = 100
 lifetime = 10.0
 preprocess = 5.0
 visibility_rect = Rect2( -1000, -1000, 2000, 2000 )
-process_material = SubResource( 8 )
+process_material = SubResource( 6 )
 texture = ExtResource( 12 )
 
 [node name="EnemyManager" type="Node2D" parent="."]
@@ -307,9 +307,9 @@ Angler = ExtResource( 10 )
 [node name="GUI" type="CanvasLayer" parent="."]
 
 [node name="Rays" type="Sprite" parent="."]
-material = SubResource( 3 )
+material = SubResource( 8 )
 position = Vector2( -34.5302, 235.073 )
 scale = Vector2( 1.99711, 2.40056 )
-texture = SubResource( 5 )
+texture = SubResource( 10 )
 
 [connection signal="body_entered" from="Camera2D/OutOfBounds" to="Camera2D/OutOfBounds" method="body_entered"]
