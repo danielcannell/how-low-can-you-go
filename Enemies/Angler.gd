@@ -3,15 +3,18 @@ extends "res://Enemies/EnemyBase.gd"
 
 
 enum State {
-    TURN,
-    FORWARD,
-    ZOMBIE,
+    DRIFTING,
+    ATTACK,
+    DEAD
 }
 
 const TURN_SPEED := 5.0
 const INITIAL_SPEED := 50.0
-const MIN_SPEED := 25.0
+const MIN_SPEED := 15.0
 const DRAG := 20.0
+export var attack_dist: float = 100;
+export var attack_speed: float = 250.0;
+export var drift_speed: float = 25.0;
 
 
 var current_state := -1
@@ -27,20 +30,31 @@ onready var lure := $Light2D
 const speed_y_up := 120.0
 const speed_y_down := 20.0
 const speed_x := 100.0
+const dead_frame = 2;
 
 var lure_offset_from_sprite := Vector2.ZERO
 
 func _ready() -> void:
-    set_max_hp(50.0)
+    set_max_hp(19.0)
     lure_offset_from_sprite = lure.position - sprite.position
-    set_state(State.TURN)
+
+    _look_at(Globals.player_position)
+    set_state(State.DRIFTING)
+
+# between 0 and 1, with 0 being undamanged and 1 being dead
+func set_damage_state(state: float) -> void:
+    state = clamp(state, 0, 1)
+    var frame = floor((1-state) * dead_frame)
+    sprite.frame = frame
 
 
 func on_dead() -> void:
     alive = false
-    # set_damage_state(1)
+    set_damage_state(1)
     sprite.flip_v = true
     lure.energy = 0
+    rotation = 0
+    set_state(State.DEAD)
 
 
 func dps() -> float:
@@ -53,52 +67,63 @@ func get_splatter_params() -> Dictionary:
 
 func damage(amount: float) -> void:
     .damage(amount)
+    set_damage_state(hp / max_hp)
 
 
-func _physics_process(delta: float) -> void:
+func _look_at(point: Vector2) -> void:
+    look_at(point)
     var flip := self.rotation_degrees < -90 or self.rotation_degrees > 90
     var flipint := -1 if flip else 1
     sprite.flip_v = flip
     lure.position = sprite.position + Vector2(lure_offset_from_sprite.x, lure_offset_from_sprite.y * flipint)
 
+
+func _look_vec() -> Vector2:
+    return Vector2(cos(rotation), sin(rotation))
+
+
+func _look_angle(a: Vector2, b: Vector2) -> float:
+    return acos(a.dot(b))
+
+
+func _physics_process(delta: float) -> void:
+    var player_vec: Vector2 = Globals.player_position - self.position;
+
     match current_state:
-        State.TURN:
-            var desired_angle: float = (self.position - Globals.player_position).angle()
-            var angle := self.rotation
-
-            var diff: float = Globals.normalise_angle(desired_angle - angle)
-            if abs(diff) < turn_speed * delta:
-                self.rotation = desired_angle
-                set_state(State.FORWARD)
-            else:
-                rotate(sign(diff) * turn_speed * delta)
-
-        State.FORWARD:
-            var dist_to_target := forward_move.length()
-            var move_vec := Vector2.ZERO
-            if dist_to_target < speed * delta:
-                move_vec = forward_move
-                set_state(State.TURN)
-            else:
-                move_vec = forward_move.normalized() * speed * delta
-            forward_move -= move_vec
+        State.DRIFTING:
             speed = max(MIN_SPEED, speed - (DRAG * delta))
+            var move_vec = _look_vec() * speed * delta
             move_and_collide(move_vec)
 
-        State.ZOMBIE:
-            # Position controlled externally
-            pass
+            if player_vec.length() < attack_dist && _look_angle(player_vec.normalized(), _look_vec()) < deg2rad(60):
+                set_state(State.ATTACK)
+
+        State.ATTACK:
+            _look_at(Globals.player_position)
+            speed = max(MIN_SPEED, speed - (DRAG * delta))
+            var move_vec = _look_vec() * speed * delta
+            move_and_collide(move_vec)
+            set_state(State.DRIFTING)
+
+        State.DEAD:
+            speed = max(MIN_SPEED, speed - (DRAG * delta))
+            var move_vec = Vector2.UP * delta * speed
+            move_and_collide(move_vec)
+
 
 
 func set_state(new_state: int) -> void:
     if new_state == current_state:
         return
 
-    if new_state == State.FORWARD:
-        forward_move = Globals.player_position - self.position
-        speed = INITIAL_SPEED
+    match new_state:
+        State.DRIFTING:
+            speed = drift_speed * 2
 
-    elif new_state == State.TURN:
-        turn_speed = TURN_SPEED
+        State.ATTACK:
+            speed = attack_speed
+
+        State.DEAD:
+            speed = drift_speed
 
     current_state = new_state
