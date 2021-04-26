@@ -5,8 +5,7 @@
 [ext_resource path="res://Art/blood_n.png" type="Texture" id=3]
 
 [sub_resource type="Gradient" id=1]
-offsets = PoolRealArray( 0, 0.880282 )
-colors = PoolColorArray( 0.313726, 0, 0, 1, 0.913725, 0, 0, 1 )
+colors = PoolColorArray( 0.313726, 0, 0, 1, 1, 0.0784314, 0.0784314, 1 )
 
 [sub_resource type="GradientTexture" id=2]
 gradient = SubResource( 1 )
@@ -24,7 +23,7 @@ _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.392045 ), 0.0, 0.0, 0, 
 curve = SubResource( 5 )
 
 [sub_resource type="ParticlesMaterial" id=7]
-lifetime_randomness = 0.3
+lifetime_randomness = 0.5
 trail_size_modifier = SubResource( 6 )
 flag_disable_z = true
 spread = 35.0
@@ -42,13 +41,14 @@ scale = 1.7
 scale_random = 1.0
 scale_curve = SubResource( 4 )
 color_ramp = SubResource( 2 )
-hue_variation_random = 0.5
 
 [node name="Splatter" type="Particles2D"]
 emitting = false
 amount = 100
+lifetime = 1.2
 one_shot = true
 explosiveness = 1.0
+randomness = 0.2
 local_coords = false
 process_material = SubResource( 7 )
 texture = ExtResource( 1 )

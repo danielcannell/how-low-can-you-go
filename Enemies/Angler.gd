@@ -128,12 +128,18 @@ func set_state(new_state: int) -> void:
 
     match new_state:
         State.DRIFTING:
+            lure.energy = 1;
+            lure.range_height = 10;
             speed = drift_speed * 2
 
         State.ATTACK, State.ENDLESS_ATTACK:
+            lure.energy = 2.5;
+            lure.range_height = 30;
             speed = attack_speed
 
         State.DEAD:
+            lure.energy = 1;
+            lure.range_height = 10;
             speed = drift_speed
 
     current_state = new_state

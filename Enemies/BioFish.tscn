@@ -1,0 +1,135 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://Art/blood.png" type="Texture" id=3]
+[ext_resource path="res://Art/bio-fish-base.png" type="Texture" id=4]
+[ext_resource path="res://Art/blood_n.png" type="Texture" id=5]
+[ext_resource path="res://Enemies/BioFish.gd" type="Script" id=6]
+[ext_resource path="res://Art/bio-fish.png" type="Texture" id=7]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 12.2664
+height = 21.054
+
+[sub_resource type="Gradient" id=2]
+colors = PoolColorArray( 0.411765, 0, 0, 1, 1, 0, 0, 1 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
+[sub_resource type="Curve" id=4]
+_data = [ Vector2( 0, 0.0272727 ), 0.0, 0.0, 0, 0, Vector2( 0.0357143, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.388393, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.834821, 0.963636 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.218182 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=5]
+curve = SubResource( 4 )
+
+[sub_resource type="Curve" id=6]
+min_value = -10.0
+max_value = 10.0
+_data = [ Vector2( 0, -6.54545 ), 0.0, 36.9261, 0, 1, Vector2( 0.334821, 5.81818 ), 0.0, 0.0, 0, 0, Vector2( 0.660714, -5.27273 ), 0.0, 0.0, 0, 0, Vector2( 0.995536, 5.27273 ), 31.4958, 0.0, 1, 0 ]
+
+[sub_resource type="CurveTexture" id=7]
+curve = SubResource( 6 )
+
+[sub_resource type="Gradient" id=8]
+colors = PoolColorArray( 0.854902, 0.0588235, 0.0588235, 1, 0.635294, 0.0235294, 0.0235294, 1 )
+
+[sub_resource type="GradientTexture" id=9]
+gradient = SubResource( 8 )
+
+[sub_resource type="Curve" id=10]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.690909 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=11]
+curve = SubResource( 10 )
+
+[sub_resource type="ParticlesMaterial" id=12]
+lifetime_randomness = 0.2
+trail_divisor = 2
+trail_size_modifier = SubResource( 11 )
+trail_color_modifier = SubResource( 9 )
+emission_shape = 1
+emission_sphere_radius = 15.49
+flag_disable_z = true
+spread = 180.0
+gravity = Vector3( 0, -1, 0 )
+initial_velocity = 1.0
+initial_velocity_random = 0.1
+angular_velocity = 61.02
+angular_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+tangential_accel_random = 0.3
+tangential_accel_curve = SubResource( 7 )
+angle = 35.4
+angle_random = 0.5
+scale = 0.8
+scale_random = 0.5
+scale_curve = SubResource( 5 )
+color_ramp = SubResource( 3 )
+hue_variation = -0.1
+hue_variation_random = 1.0
+
+[sub_resource type="Shader" id=14]
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+
+void fragment() {
+    // Get per-instance state stashed in the MODULATE uniform
+    vec4 m = MODULATE;
+    float phase = m.x;
+
+    float t = TIME + 100.0 * phase;
+
+    vec2 uv = UV;
+    uv.x += 0.05 * (pow(uv.x, 2.0) * sin(1.0 * (4.0 * t + uv.y * 10.0) + 6.0 * sin(5.0 * uv.x)));
+    uv.y += 0.5 * (pow((uv.y - 0.5) , 2.0) * sin(2.0 * (2.0 * t + uv.x * 10.0) + 6.0 * sin(5.0 * uv.y)));
+
+    float intensity = pow(sin(10.0 * uv.y + sin(20.0 * uv.x + 0.7 * t) + 0.3 * t), 2.0);
+    intensity = 0.4 + 0.6 * intensity;
+    intensity *= texture(TEXTURE, uv).a;
+
+    vec3 base_col = texture(NORMAL_TEXTURE, uv).xyz;
+
+    float blue = 0.6 + 0.4 * pow(sin(uv.x + t), 2.0);
+    float green = 0.6 + 0.4 * pow(sin(uv.y + 1.1 * t), 2.0);
+    vec3 lum_col = vec3(0.4, green, blue);
+
+    vec3 col = base_col * lum_col;
+
+    COLOR = vec4(col, 1.5 * intensity);
+}
+"
+
+[sub_resource type="ShaderMaterial" id=13]
+shader = SubResource( 14 )
+
+[node name="Node2D" type="KinematicBody2D"]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource( 6 )
+
+[node name="Sprite" type="Sprite" parent="."]
+modulate = Color( 1, 1, 1, 0.490196 )
+texture = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -2.88526, 0.708134 )
+rotation = 1.57079
+shape = SubResource( 1 )
+
+[node name="BloodLeak" type="Particles2D" parent="."]
+position = Vector2( 0.503281, 0.175934 )
+scale = Vector2( -1, 1 )
+emitting = false
+amount = 50
+lifetime = 2.0
+randomness = 0.5
+local_coords = false
+process_material = SubResource( 12 )
+texture = ExtResource( 3 )
+normal_map = ExtResource( 5 )
+
+[node name="Glow" type="Sprite" parent="."]
+material = SubResource( 13 )
+texture = ExtResource( 7 )

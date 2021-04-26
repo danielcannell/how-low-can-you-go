@@ -3,6 +3,7 @@ extends Node
 
 export (PackedScene) var Floater
 export (PackedScene) var Fish
+export (PackedScene) var BioFish
 export (PackedScene) var Shark
 export (PackedScene) var Jelly
 export (PackedScene) var Angler
@@ -26,21 +27,24 @@ onready var enemy_types = [
         [20, null],
         [100, Floater],
         [100, Jelly],
-        [50, Fish],
+        [45, Fish],
+        [5, BioFish],
         [2, Shark],
     ]],
     [0.2, [
         [20, null],
         [100, Floater],
         [100, Jelly],
-        [50, Fish],
+        [25, Fish],
+        [25, BioFish],
         [5, Shark],
     ]],
     [0.3, [
         [20, null],
         [100, Floater],
         [100, Jelly],
-        [50, Fish],
+        [10, Fish],
+        [40, BioFish],
         [10, Angler],
         [2, Shark],
     ]]
