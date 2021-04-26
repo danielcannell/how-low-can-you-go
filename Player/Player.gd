@@ -12,12 +12,14 @@ enum AttackState { IDLE, AIM, FIRE }
 
 
 onready var sprite := $Sprite
+onready var skelly := $Skelly
 onready var spotlight := $Spotlight
 onready var arealight := $AreaLight
 onready var gun := $Gun
 onready var gunblast := $GunBlast
 onready var damage_zone := $DamageZone
 onready var bubbles := $Bubbles
+onready var death_cloud := $DeathCloud
 
 
 const HARPOON_KICK = 400
@@ -127,6 +129,9 @@ func update_health(delta: float) -> void:
     if alive && health < 0:
         alive = false
         bubbles.emitting = false
+        death_cloud.emitting = true
+        skelly.visible = true
+        sprite.visible = false
         emit_signal("died")
 
 
