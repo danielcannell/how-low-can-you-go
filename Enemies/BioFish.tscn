@@ -70,7 +70,7 @@ color_ramp = SubResource( 3 )
 hue_variation = -0.1
 hue_variation_random = 1.0
 
-[sub_resource type="Shader" id=14]
+[sub_resource type="Shader" id=13]
 code = "shader_type canvas_item;
 render_mode unshaded;
 
@@ -102,8 +102,8 @@ void fragment() {
 }
 "
 
-[sub_resource type="ShaderMaterial" id=13]
-shader = SubResource( 14 )
+[sub_resource type="ShaderMaterial" id=14]
+shader = SubResource( 13 )
 
 [node name="Node2D" type="KinematicBody2D"]
 collision_layer = 4
@@ -111,7 +111,7 @@ collision_mask = 0
 script = ExtResource( 6 )
 
 [node name="Sprite" type="Sprite" parent="."]
-modulate = Color( 1, 1, 1, 0.490196 )
+modulate = Color( 1, 1, 1, 0.819608 )
 texture = ExtResource( 4 )
 normal_map = ExtResource( 1 )
 
@@ -133,5 +133,5 @@ texture = ExtResource( 3 )
 normal_map = ExtResource( 5 )
 
 [node name="Glow" type="Sprite" parent="."]
-material = SubResource( 13 )
+material = SubResource( 14 )
 texture = ExtResource( 7 )

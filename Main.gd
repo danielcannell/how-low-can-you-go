@@ -2,6 +2,7 @@ extends Node
 
 
 const Player = preload("res://Player/Player.tscn")
+const DeadPlayer = preload("res://Player/DeadPlayer.tscn")
 const Harpoon = preload("res://Harpoon/Harpoon.tscn")
 
 
@@ -24,6 +25,16 @@ var fall_rate := 50.0
 var prev_rounded_depth := 0.0
 var score := 0.0
 
+var dead_players = []
+var next_dead_player = 0
+
+
+class DepthSorter:
+    static func sort(a, b):
+        if a["depth"] < b["depth"]:
+            return true
+        return false
+
 
 func _ready() -> void:
     Globals.depth = 0.0
@@ -35,11 +46,17 @@ func _ready() -> void:
     leaderboard_button.connect("button_up", self, "show_leaderboard")
     submit_button.connect("button_up", self, "submit_score")
     http_request.connect("leaderboard_updated", self, "on_leaderboard_updated")
+    http_request.fetch_leaderboard()
+    
+
 
 
 func on_leaderboard_updated(leaderboard):
-    # print("Update: ", leaderboard)
-
+    dead_players = []
+    for name in leaderboard:
+        dead_players.append({"name": name, "depth": leaderboard[name]})
+    dead_players.sort_custom(DepthSorter, "sort")
+    
     for n in leaderboard_container.get_children():
         leaderboard_container.remove_child(n)
         n.queue_free()
@@ -107,6 +124,15 @@ func spawn_player() -> void:
     harpoon.connect("bool_splatter", self, "_on_blood_splatter")
 
     player.connect("died", self, "on_player_died")
+    
+    
+func spawn_dead_player(depth: float, name) -> void:
+    var p = DeadPlayer.instance()
+    p.position = Vector2(rand_range(-Globals.screen_width/2, Globals.screen_width/2), depth)
+    p.rotation = rand_range(0, 2*PI)
+    p.set_name(name)
+    add_child(p)
+    
 
 
 func on_player_died():
@@ -125,6 +151,9 @@ func depth_scale(depth: float) -> float:
     # Logistic function
     return 1.0 - 1.0 / (1.0 + exp(-(depth - mid_point) / scale))
 
+
+func _depth_to_m(d):
+    return Globals.depth / 32
 
 func _process(delta: float) -> void:
     var vp := camera.get_viewport()
@@ -148,6 +177,11 @@ func _process(delta: float) -> void:
     if prev_rounded_depth != rounded_depth:
         depth_label.text = "Depth: " + str(rounded_depth) + " m"
         prev_rounded_depth = rounded_depth
+        
+        
+    while dead_players.size() > next_dead_player and dead_players[next_dead_player]['depth'] < _depth_to_m(Globals.depth) + 100:
+        spawn_dead_player(dead_players[next_dead_player]['depth'] * 32, dead_players[next_dead_player]['name'])
+        next_dead_player += 1
 
 
 func color_from_hsl(hue: float, sat: float, light: float) -> Color:

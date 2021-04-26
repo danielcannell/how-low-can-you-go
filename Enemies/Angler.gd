@@ -11,11 +11,11 @@ enum State {
 
 const TURN_SPEED := 5.0
 const INITIAL_SPEED := 50.0
-const MIN_SPEED := 15.0
+const MIN_SPEED := 20.0
 const DRAG := 30.0
 const attack_dist: float = 150.0;
 const attack_speed: float = 330.0;
-const drift_speed: float = 25.0;
+const drift_speed: float = 50.0;
 const attack_end_dist: float = 310.0;
 
 
@@ -133,8 +133,8 @@ func set_state(new_state: int) -> void:
             speed = drift_speed * 2
 
         State.ATTACK, State.ENDLESS_ATTACK:
-            lure.energy = 2.5;
-            lure.range_height = 30;
+            lure.energy = 3.0;
+            lure.range_height = 40;
             speed = attack_speed
 
         State.DEAD:

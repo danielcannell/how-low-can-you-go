@@ -1,0 +1,69 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Art/skelly.png" type="Texture" id=1]
+[ext_resource path="res://Art/skelly-algy.png" type="Texture" id=2]
+[ext_resource path="res://Player/DeadPlayer.gd" type="Script" id=3]
+[ext_resource path="res://Art/SmallFont.tres" type="DynamicFont" id=4]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+// render_mode light_only;
+
+// colour conversion taken from https://stackoverflow.com/questions/15095909/from-rgb-to-hsv-in-opengl-glsl
+
+// All components are in the range [0…1], including hue.
+vec3 rgb2hsv(vec3 c)
+{
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+// All components are in the range [0…1], including hue.
+vec3 hsv2rgb(vec3 c)
+{
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+void light() {
+    float brightness = length(LIGHT.rgb);
+    vec3 light_hsv = rgb2hsv(LIGHT.rgb);
+    LIGHT.rgb += exp(brightness * 2.0) * vec3(0, 0.85, 0.15);
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+
+[node name="Node2D" type="Node2D"]
+z_index = -1
+script = ExtResource( 3 )
+
+[node name="Skelly" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+
+[node name="Algy" type="Sprite" parent="."]
+material = SubResource( 2 )
+texture = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = -23.5
+margin_top = -60.3333
+margin_right = 25.5
+margin_bottom = -29.3333
+custom_fonts/font = ExtResource( 4 )
+custom_colors/font_color = Color( 0.992157, 1, 0.858824, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Bob"
+align = 1
+valign = 1
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
