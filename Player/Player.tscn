@@ -189,3 +189,5 @@ randomness = 0.1
 process_material = SubResource( 11 )
 texture = ExtResource( 11 )
 normal_map = ExtResource( 4 )
+
+[node name="Tween" type="Tween" parent="."]

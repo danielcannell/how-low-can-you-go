@@ -127,11 +127,26 @@ func update_light() -> void:
         spotlight.energy = 0
 
 
+func player_flash() -> void:
+    var tween = get_node("Tween")
+    if not tween.is_active():
+        var s= Color(1,1,1,1)
+        var e= Color(1.9,1.2,1.2,1.0)
+        tween.interpolate_property(sprite, "modulate",
+                s, e, 0.1,
+                Tween.TRANS_BACK, Tween.EASE_OUT)
+        tween.interpolate_property(sprite, "modulate",
+                e, s, 0.1,
+                Tween.TRANS_SINE, Tween.EASE_OUT)
+        tween.start()
+
+
 func update_health(delta: float) -> void:
     for b in damage_zone.get_overlapping_bodies():
         if b.has_method("dps"):
             if b.alive:
                 health -= delta * b.dps()
+                player_flash()
 
     healthbar.set_percent(health / 100.0)
     gore_sprite.modulate.a = smoothstep(0, 1, 0.2 + 1 - (health / 100.0))
