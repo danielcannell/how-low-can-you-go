@@ -17,7 +17,6 @@ onready var enemy_types = [
     [0.2, [
         [100, null],
         [20, Fish],
-        [20, Shark],
     ]],
     [0.1, [
         [100, null],
