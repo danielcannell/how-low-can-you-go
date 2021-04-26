@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://Enemies/EnemyManager.gd" type="Script" id=2]
@@ -13,7 +13,8 @@
 [ext_resource path="res://Art/SmallFont.tres" type="DynamicFont" id=11]
 [ext_resource path="res://Art/spec.png" type="Texture" id=12]
 [ext_resource path="res://Art/spec_n.png" type="Texture" id=13]
-[ext_resource path="res://Enemies/BioFish.tscn" type="PackedScene" id=14]
+[ext_resource path="res://HTTPRequest.gd" type="Script" id=14]
+[ext_resource path="res://Enemies/BioFish.tscn" type="PackedScene" id=15]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10000, 20 )
@@ -245,9 +246,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -178.5
-margin_top = -68.0
+margin_top = -92.5
 margin_right = 178.5
-margin_bottom = 68.0
+margin_bottom = 92.5
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -274,6 +275,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="LeaderboardButton" type="Button" parent="UICanvas/GameOverUI/VBoxContainer"]
+margin_top = 140.0
+margin_right = 357.0
+margin_bottom = 185.0
+custom_fonts/font = ExtResource( 9 )
+text = "Leaderboard"
+
 [node name="DepthLabel" type="Label" parent="UICanvas"]
 margin_left = 10.0
 margin_top = 10.0
@@ -281,6 +289,71 @@ margin_right = 77.0
 margin_bottom = 14.0
 custom_fonts/font = ExtResource( 11 )
 text = "Depth: 0 m"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeaderboardUI" type="Control" parent="UICanvas"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UICanvas/LeaderboardUI"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -208.0
+margin_top = -164.0
+margin_right = 209.0
+margin_bottom = 90.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeaderboardLabel" type="Label" parent="UICanvas/LeaderboardUI/VBoxContainer"]
+margin_right = 417.0
+margin_bottom = 87.0
+custom_fonts/font = ExtResource( 8 )
+text = "Leaderboard"
+
+[node name="GridContainer" type="GridContainer" parent="UICanvas/LeaderboardUI/VBoxContainer"]
+margin_left = 208.0
+margin_top = 91.0
+margin_right = 208.0
+margin_bottom = 91.0
+size_flags_horizontal = 4
+custom_constants/hseparation = 50
+columns = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UICanvas/LeaderboardUI/VBoxContainer"]
+margin_top = 95.0
+margin_right = 417.0
+margin_bottom = 132.0
+
+[node name="NameTextEdit" type="TextEdit" parent="UICanvas/LeaderboardUI/VBoxContainer/HBoxContainer"]
+margin_right = 321.0
+margin_bottom = 37.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 11 )
+text = "Name"
+
+[node name="SubmitButton" type="Button" parent="UICanvas/LeaderboardUI/VBoxContainer/HBoxContainer"]
+margin_left = 325.0
+margin_right = 417.0
+margin_bottom = 37.0
+custom_fonts/font = ExtResource( 11 )
+text = "Submit"
+
+[node name="RestartButton" type="Button" parent="UICanvas/LeaderboardUI/VBoxContainer"]
+margin_top = 136.0
+margin_right = 417.0
+margin_bottom = 181.0
+custom_fonts/font = ExtResource( 9 )
+text = "Start Again"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -327,7 +400,7 @@ normal_map = ExtResource( 13 )
 script = ExtResource( 2 )
 Floater = ExtResource( 3 )
 Fish = ExtResource( 4 )
-BioFish = ExtResource( 14 )
+BioFish = ExtResource( 15 )
 Shark = ExtResource( 5 )
 Jelly = ExtResource( 7 )
 Angler = ExtResource( 10 )
@@ -339,5 +412,8 @@ material = SubResource( 12 )
 position = Vector2( -34.5302, -17.3237 )
 scale = Vector2( 1.99711, 3.38648 )
 texture = SubResource( 14 )
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+script = ExtResource( 14 )
 
 [connection signal="body_entered" from="Camera2D/OutOfBounds" to="Camera2D/OutOfBounds" method="body_entered"]
