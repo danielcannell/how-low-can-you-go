@@ -35,7 +35,7 @@ vec3 hsv2rgb(vec3 c)
 void light() {
     float brightness = length(LIGHT.rgb);
     vec3 light_hsv = rgb2hsv(LIGHT.rgb);
-    LIGHT.rgb += exp(brightness * 2.0) * vec3(0, 0.85, 0.15);
+    LIGHT.rgb += min(exp(brightness * 2.0), 0.5) * vec3(0, 0.85, 0.15);
 }"
 
 [sub_resource type="ShaderMaterial" id=2]
