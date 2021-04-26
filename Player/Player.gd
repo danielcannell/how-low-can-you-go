@@ -12,6 +12,7 @@ enum AttackState { IDLE, AIM, FIRE }
 
 
 onready var sprite := $Sprite
+onready var gore_sprite := $Gore
 onready var skelly := $Skelly
 onready var spotlight := $Spotlight
 onready var arealight := $AreaLight
@@ -44,6 +45,7 @@ func _ready() -> void:
     healthbar = HealthBar.instance()
     healthbar.position = Vector2(0, -20)
     add_child(healthbar)
+    gore_sprite.modulate.a = 0.0
 
 
 func set_harpoon(h) -> void:
@@ -68,16 +70,21 @@ func update_swim_state(a: Vector2) -> void:
         match swim_state:
             SwimState.IDLE:
                 sprite.set_animation("idle")
+                gore_sprite.frame = 0
                 gun.set_flip_h(false)
                 gun.transform = gun_idle_transform
             SwimState.LEFT:
                 sprite.set_animation("swim")
+                gore_sprite.frame = 1
                 sprite.set_flip_h(false)
+                gore_sprite.set_flip_h(false)
                 gun.set_flip_h(true)
                 gun.transform = gun_left_transform
             SwimState.RIGHT:
                 sprite.set_animation("swim")
+                gore_sprite.frame = 1
                 sprite.set_flip_h(true)
+                gore_sprite.set_flip_h(true)
                 gun.set_flip_h(false)
                 gun.transform = gun_right_transform
 
@@ -116,6 +123,8 @@ func update_light() -> void:
     spotlight.rotation = aim_dir.angle()
     arealight.energy = 1 - Globals.color_scale
     spotlight.energy = 1 - Globals.color_scale
+    if not alive:
+        spotlight.energy = 0
 
 
 func update_health(delta: float) -> void:
@@ -125,6 +134,7 @@ func update_health(delta: float) -> void:
                 health -= delta * b.dps()
 
     healthbar.set_percent(health / 100.0)
+    gore_sprite.modulate.a = smoothstep(0, 1, 0.2 + 1 - (health / 100.0))
 
     if alive && health < 0:
         alive = false
@@ -132,6 +142,7 @@ func update_health(delta: float) -> void:
         death_cloud.emitting = true
         skelly.visible = true
         sprite.visible = false
+        spotlight.energy = 0
         emit_signal("died")
 
 

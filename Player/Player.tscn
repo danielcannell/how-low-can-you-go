@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://Art/diver.png" type="Texture" id=1]
 [ext_resource path="res://Player/Player.gd" type="Script" id=2]
@@ -11,6 +11,8 @@
 [ext_resource path="res://Art/lightaura.png" type="Texture" id=9]
 [ext_resource path="res://Art/skelly.png" type="Texture" id=10]
 [ext_resource path="res://Art/blood.png" type="Texture" id=11]
+[ext_resource path="res://Art/driver-gore.png" type="Texture" id=12]
+[ext_resource path="res://Art/skelly_n.png" type="Texture" id=13]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -119,6 +121,10 @@ position = Vector2( 0.235703, 0 )
 frames = SubResource( 1 )
 animation = "idle"
 
+[node name="Gore" type="Sprite" parent="."]
+texture = ExtResource( 12 )
+vframes = 2
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 2 )
 
@@ -171,6 +177,7 @@ shape = SubResource( 8 )
 [node name="Skelly" type="Sprite" parent="."]
 visible = false
 texture = ExtResource( 10 )
+normal_map = ExtResource( 13 )
 
 [node name="DeathCloud" type="Particles2D" parent="."]
 emitting = false
